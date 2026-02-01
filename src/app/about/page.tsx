@@ -2,7 +2,7 @@
 
 import { getSystemStatus } from '@/lib/api';
 import type { SystemStatus } from '@/lib/types';
-import { Activity, Code2, Github, Heart, LayoutGrid, Braces, Wind, Sparkles } from 'lucide-react';
+import { Activity, Code2, Heart, LayoutGrid, Braces, Wind, Sparkles } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 const STACK = [
@@ -20,8 +20,8 @@ export default function AboutPage() {
   }, []);
 
   return (
-    <div className="space-y-8">
-      <section className="rounded-3xl border border-border bg-card/70 p-8 text-center">
+    <div className="space-y-6">
+      <section className="rounded-3xl border border-border bg-card/70 p-7 text-center md:p-8">
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-glow">
           <img src="/logo.svg" alt="Logo" className="h-8 w-8" />
         </div>
@@ -34,76 +34,68 @@ export default function AboutPage() {
             </span>
           )}
         </p>
-        <p className="mt-4 text-sm text-muted-foreground">
-          一个极简、优雅的在线音乐播放器。专注于纯粹的听歌体验，为您带来身临其境的视听享受。
+        <p className="mt-3 text-sm text-muted-foreground">
+          极简、优雅的在线音乐播放器，专注于纯粹的听歌体验。
         </p>
       </section>
 
-      {status && (
+      <div className="grid gap-4 md:grid-cols-3">
         <section className="rounded-3xl border border-border bg-card/70 p-6">
           <div className="flex items-center gap-2 text-sm font-semibold">
             <Activity size={18} className="text-primary" />
             服务状态
           </div>
-          <div className="mt-4 grid gap-4 md:grid-cols-3">
-            <div className="rounded-2xl border border-border/60 bg-background/60 p-4">
-              <p className="text-xs text-muted-foreground">运行状态</p>
-              <p className="mt-2 flex items-center gap-2 text-sm">
-                <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                {status.status}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border/60 bg-background/60 p-4">
-              <p className="text-xs text-muted-foreground">已运行</p>
-              <p className="mt-2 text-sm font-semibold">{Math.floor(status.uptime / 3600)} 小时</p>
-            </div>
-            <div className="rounded-2xl border border-border/60 bg-background/60 p-4">
-              <p className="text-xs text-muted-foreground">支持平台</p>
-              <div className="mt-2 flex flex-wrap gap-2 text-xs">
-                {status.platforms
-                  .filter((platform) => platform.enabled)
-                  .map((platform) => (
-                    <span
-                      key={platform.name}
-                      className="rounded-full border border-border/60 px-2 py-1"
-                    >
-                      {platform.name}
-                    </span>
-                  ))}
-              </div>
-            </div>
+          <div className="mt-4 space-y-3 text-sm text-muted-foreground">
+            {status ? (
+              <>
+                <div className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                  {status.status}
+                </div>
+                <p>已运行 {Math.floor(status.uptime / 3600)} 小时</p>
+                <p>
+                  支持 {status.platforms.filter((platform) => platform.enabled).length} 个平台
+                </p>
+              </>
+            ) : (
+              <>
+                <p>状态加载中…</p>
+                <p>正在获取服务信息</p>
+              </>
+            )}
           </div>
         </section>
-      )}
 
-      <section className="rounded-3xl border border-border bg-card/70 p-6 text-center">
-        <div className="flex items-center justify-center gap-2 text-sm font-semibold">
-          <Code2 size={18} className="text-primary" />
-          技术栈
-        </div>
-        <div className="mt-6 grid w-full max-w-xl grid-cols-2 gap-7 text-sm sm:grid-cols-4 mx-auto">
-          {STACK.map((item) => {
-            const Icon = item.icon;
-            return (
-              <span
-                key={item.label}
-                className="flex aspect-square w-full flex-col items-center justify-center gap-2 rounded-2xl border border-border/60 bg-background/50 text-xs font-medium"
-              >
-                <Icon size={16} className="text-primary" />
-                {item.label}
-              </span>
-            );
-          })}
-        </div>
-      </section>
+        <section className="rounded-3xl border border-border bg-card/70 p-6 text-center">
+          <div className="flex items-center justify-center gap-2 text-sm font-semibold">
+            <Code2 size={18} className="text-primary" />
+            技术栈
+          </div>
+          <div className="mt-5 grid grid-cols-2 gap-4 text-xs">
+            {STACK.map((item) => {
+              const Icon = item.icon;
+              return (
+                <span
+                  key={item.label}
+                  className="flex aspect-square w-full flex-col items-center justify-center gap-2 rounded-2xl border border-border/60 bg-background/50 font-medium"
+                >
+                  <Icon size={16} className="text-primary" />
+                  {item.label}
+                </span>
+              );
+            })}
+          </div>
+        </section>
 
-      <section className="rounded-3xl border border-border bg-card/70 p-6 text-center text-xs text-muted-foreground">
-        <p className="flex flex-wrap items-center justify-center gap-1">
-          Made with
-          <Heart size={12} fill="currentColor" className="text-primary" />
-          yyMusic
-        </p>
-      </section>
+        <section className="rounded-3xl border border-border bg-card/70 p-6 text-center text-xs text-muted-foreground">
+          <p className="flex flex-wrap items-center justify-center gap-1">
+            Made with
+            <Heart size={12} fill="currentColor" className="text-primary" />
+            yyMusic
+          </p>
+          <p className="mt-2 text-xs text-muted-foreground">感谢每一位正在使用它的你</p>
+        </section>
+      </div>
     </div>
   );
 }

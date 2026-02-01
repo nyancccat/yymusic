@@ -2,7 +2,7 @@
 
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
-import { Clock, Heart, Home, Info, ListMusic, Moon, Search, Sun } from 'lucide-react';
+import { Clock, Heart, Home, Info, ListMusic, Search } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -24,10 +24,6 @@ const libraryNav: NavItem[] = [
   { label: '关于', href: '/about', icon: Info },
 ];
 
-const recommendNav: NavItem[] = [
-  { label: '今日推荐', href: '/recommend/today', icon: Sun },
-  { label: '车载电台', href: '/recommend/drive', icon: Moon },
-];
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -61,28 +57,6 @@ export function Sidebar() {
                     className={cn(
                       'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition hover:bg-secondary/70 hover:text-foreground',
                       isActive(item.href) && 'bg-primary text-primary-foreground shadow-glow'
-                    )}
-                  >
-                    <item.icon size={18} />
-                    <span>{item.label}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <p className="px-2 text-xs uppercase tracking-[0.28em] text-muted-foreground">
-              歌单推荐
-            </p>
-            <ul className="mt-3 space-y-1">
-              {recommendNav.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition hover:bg-secondary/70 hover:text-foreground',
-                      isActive(item.href) && 'bg-secondary text-foreground'
                     )}
                   >
                     <item.icon size={18} />

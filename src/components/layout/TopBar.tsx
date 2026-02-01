@@ -15,8 +15,6 @@ const TITLE_MAP: Record<string, { title: string; subtitle: string }> = {
   '/favorites': { title: '我喜欢', subtitle: '收藏的声音都在这里' },
   '/queue': { title: '播放列表', subtitle: '即将播放的内容' },
   '/recent': { title: '最近播放', subtitle: '回到刚刚听的旋律' },
-  '/recommend/today': { title: '今日推荐', subtitle: '今天最值得收藏的旋律' },
-  '/recommend/drive': { title: '车载电台', subtitle: '公路夜行的随行曲' },
   '/about': { title: '关于', subtitle: 'yyMusic · 余韵音乐' },
 };
 
