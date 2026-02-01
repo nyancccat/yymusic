@@ -33,6 +33,7 @@ export function FullScreenPlayer({ onClose }: FullScreenPlayerProps) {
 
   const activeLineRef = useRef<HTMLButtonElement>(null);
   const lyricsContainerRef = useRef<HTMLDivElement>(null);
+  const swipeStartRef = useRef<{ x: number; y: number; allowClose: boolean } | null>(null);
 
   useEffect(() => {
     if (!isScrubbing) {
@@ -96,7 +97,32 @@ export function FullScreenPlayer({ onClose }: FullScreenPlayerProps) {
   if (!currentTrack) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex h-screen w-screen flex-col overflow-hidden bg-background text-foreground">
+    <div
+      className="fixed inset-0 z-50 flex h-screen w-screen flex-col overflow-hidden bg-background text-foreground"
+      onTouchStart={(event) => {
+        const target = event.target as HTMLElement | null;
+        if (target?.closest('[data-swipe-ignore="true"]')) {
+          swipeStartRef.current = null;
+          return;
+        }
+        const touch = event.touches[0];
+        const allowClose = touch.clientY <= 120;
+        swipeStartRef.current = { x: touch.clientX, y: touch.clientY, allowClose };
+      }}
+      onTouchEnd={(event) => {
+        if (!swipeStartRef.current || !swipeStartRef.current.allowClose) {
+          swipeStartRef.current = null;
+          return;
+        }
+        const touch = event.changedTouches[0];
+        const deltaX = touch.clientX - swipeStartRef.current.x;
+        const deltaY = touch.clientY - swipeStartRef.current.y;
+        swipeStartRef.current = null;
+        if (deltaY > 70 && Math.abs(deltaX) < 60) {
+          onClose();
+        }
+      }}
+    >
       <div className="absolute inset-0">
         {coverUrl ? (
           <img src={coverUrl} alt="" className="h-full w-full object-cover opacity-40 blur-3xl" />
@@ -106,6 +132,9 @@ export function FullScreenPlayer({ onClose }: FullScreenPlayerProps) {
       </div>
 
       <div className="relative flex items-center justify-between px-6 py-6">
+        <div className="absolute inset-x-0 top-2 flex justify-center md:hidden">
+          <div className="h-1.5 w-12 rounded-full bg-border/80" />
+        </div>
         <Button variant="outline" size="icon" onClick={onClose}>
           <ChevronDown size={18} />
         </Button>
@@ -130,6 +159,7 @@ export function FullScreenPlayer({ onClose }: FullScreenPlayerProps) {
         <div className="flex flex-1 flex-col">
           <div
             ref={lyricsContainerRef}
+            data-swipe-ignore="true"
             className="max-h-[360px] space-y-4 overflow-y-auto rounded-3xl border border-border/60 bg-card/80 p-6"
           >
             {lyricLoading ? (
@@ -164,6 +194,7 @@ export function FullScreenPlayer({ onClose }: FullScreenPlayerProps) {
           <span>{formatTime(duration)}</span>
         </div>
         <input
+          data-swipe-ignore="true"
           type="range"
           min={0}
           max={duration || 100}

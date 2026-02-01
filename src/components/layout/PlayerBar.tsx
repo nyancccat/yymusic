@@ -22,6 +22,7 @@ import {
   SkipForward,
   Volume2,
   VolumeX,
+  ChevronUp,
 } from 'lucide-react';
 import { useCallback, useRef, useState } from 'react';
 
@@ -50,12 +51,13 @@ export function PlayerBar() {
     cyclePlayMode,
   } = usePlayer();
 
-  const { toggleFullScreen } = useLyrics();
+  const { toggleFullScreen, setShowFullScreen } = useLyrics();
 
   const progressRef = useRef<HTMLDivElement>(null);
   const volumeRef = useRef<HTMLDivElement>(null);
   const [prevVolume, setPrevVolume] = useState(1);
   const [showQualityMenu, setShowQualityMenu] = useState(false);
+  const swipeStartRef = useRef<{ x: number; y: number } | null>(null);
 
   const handleProgressClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -112,8 +114,29 @@ export function PlayerBar() {
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
+  const handleTouchStart = (event: React.TouchEvent) => {
+    const touch = event.touches[0];
+    swipeStartRef.current = { x: touch.clientX, y: touch.clientY };
+  };
+
+  const handleTouchEnd = (event: React.TouchEvent) => {
+    if (!swipeStartRef.current || !currentTrack) return;
+    const touch = event.changedTouches[0];
+    const deltaX = touch.clientX - swipeStartRef.current.x;
+    const deltaY = swipeStartRef.current.y - touch.clientY;
+    swipeStartRef.current = null;
+
+    if (deltaY > 50 && Math.abs(deltaX) < 60) {
+      setShowFullScreen(true);
+    }
+  };
+
   return (
-    <div className="fixed bottom-[calc(var(--mobile-nav-height)+env(safe-area-inset-bottom))] left-0 right-0 z-50 border-t border-border/60 bg-card/90 backdrop-blur-xl lg:bottom-0">
+    <div
+      className="fixed bottom-[calc(var(--mobile-nav-height)+env(safe-area-inset-bottom))] left-0 right-0 z-50 border-t border-border/60 bg-card/90 backdrop-blur-xl lg:bottom-0"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       <div className="px-4 py-2 md:px-8 md:py-3">
         <div className="flex items-center gap-3 md:hidden">
           <button
@@ -122,7 +145,11 @@ export function PlayerBar() {
             onClick={toggleFullScreen}
             title="进入全屏模式"
           >
-            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-secondary">
+            <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-secondary">
+              <span className="pointer-events-none absolute -inset-1 rounded-2xl border border-primary/30 opacity-70 animate-pulse md:hidden" />
+              <span className="pointer-events-none absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-glow md:hidden">
+                <ChevronUp size={10} />
+              </span>
               {currentTrack?.cover ? (
                 <img
                   src={currentTrack.cover}
