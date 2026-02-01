@@ -1,67 +1,61 @@
 'use client';
 
-import { Play, Music } from 'lucide-react';
-import styles from './MediaCard.module.css';
+import { cn } from '@/lib/utils';
+import { Music2, Play } from 'lucide-react';
 
 interface MediaCardProps {
-    id: string;
-    title: string;
-    subtitle?: string;
-    imageUrl?: string;
-    onClick?: () => void;
-    onPlay?: () => void;
+  id: string;
+  title: string;
+  subtitle?: string;
+  imageUrl?: string;
+  onPlay?: () => void;
 }
 
-export function MediaCard({
-    title,
-    subtitle,
-    imageUrl,
-    onClick,
-    onPlay,
-}: MediaCardProps) {
-    const handlePlayClick = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        onPlay?.();
-    };
+export function MediaCard({ title, subtitle, imageUrl, onPlay }: MediaCardProps) {
+  const handlePlayClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onPlay?.();
+  };
 
-    return (
-        <div className={styles.card} onClick={onClick}>
-            <div className={styles.imageWrapper}>
-                {imageUrl ? (
-                    <img
-                        src={imageUrl}
-                        alt={title}
-                        className={styles.image}
-                        loading="lazy"
-                    />
-                ) : (
-                    <div className={styles.placeholder}>
-                        <Music size={48} />
-                    </div>
-                )}
-                <div className={styles.overlay}>
-                    <button
-                        className={styles.playButton}
-                        onClick={handlePlayClick}
-                        aria-label={`播放 ${title}`}
-                    >
-                        <Play size={24} style={{ marginLeft: 2 }} />
-                    </button>
-                </div>
-            </div>
-            <div className={styles.info}>
-                <div className={styles.title}>{title}</div>
-                {subtitle && <div className={styles.subtitle}>{subtitle}</div>}
-            </div>
-        </div>
-    );
+  return (
+    <div className="group flex flex-col gap-3 rounded-2xl border border-border/60 bg-card/80 p-3 transition hover:border-primary/70 hover:shadow-glow">
+      <div className="relative overflow-hidden rounded-xl bg-secondary">
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={title}
+            className="h-40 w-full object-cover transition group-hover:scale-105"
+          />
+        ) : (
+          <div className="flex h-40 items-center justify-center text-muted-foreground">
+            <Music2 size={32} />
+          </div>
+        )}
+        <button
+          type="button"
+          className={cn(
+            'absolute inset-0 flex items-center justify-center opacity-0 transition group-hover:opacity-100'
+          )}
+          onClick={handlePlayClick}
+          aria-label={`播放 ${title}`}
+        >
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-glow">
+            <Play size={18} className="ml-0.5" fill="currentColor" strokeWidth={0} />
+          </span>
+        </button>
+      </div>
+      <div className="space-y-1">
+        <p className="truncate text-sm font-semibold text-foreground">{title}</p>
+        {subtitle && <p className="truncate text-xs text-muted-foreground">{subtitle}</p>}
+      </div>
+    </div>
+  );
 }
 
-// Grid wrapper component
 interface MediaGridProps {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 export function MediaGrid({ children }: MediaGridProps) {
-    return <div className={styles.grid}>{children}</div>;
+  return <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{children}</div>;
 }

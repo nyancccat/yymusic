@@ -1,14 +1,14 @@
 <div align="center">
 
-<img src="/public/logo.svg" alt="QListen Logo" width="120" height="120">
+<img src="/public/logo.svg" alt="yyMusic Logo" width="120" height="120">
 
-# 轻听音乐 (QListen)
+# 余韵音乐 (yyMusic)
 
 **极简 · 优雅 · 沉浸式**
 
 基于 Next.js 和 TuneHub API 构建的现代化在线音乐播放器
 
-[在线体验](https://music.byebug.cn) · [反馈问题](https://github.com/QingJ01/QListen/issues) · [加入社群](#-加入社群)
+[在线体验](https://music.byebug.cn) · [反馈问题](https://github.com/QingJ01/yyMusic/issues) · [加入社群](#-加入社群)
 
 </div>
 
@@ -60,10 +60,10 @@
 
 ```bash
 # 1. 克隆项目
-git clone https://github.com/QingJ01/QListen.git
+git clone https://github.com/QingJ01/yyMusic.git
 
 # 2. 进入目录
-cd QListen
+cd yyMusic
 
 # 3. 安装依赖
 npm install

@@ -1,26 +1,21 @@
 'use client';
 
-import { Moon, Sun } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { useTheme } from '@/context/ThemeContext';
-import styles from './ThemeToggle.module.css';
+import { Moon, Sun } from 'lucide-react';
 
 export function ThemeToggle() {
-    const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
 
-    return (
-        <button
-            className={styles.toggle}
-            onClick={toggleTheme}
-            aria-label={theme === 'dark' ? '切换到浅色模式' : '切换到深色模式'}
-            title={theme === 'dark' ? '浅色模式' : '深色模式'}
-        >
-            <div className={styles.iconWrapper}>
-                {theme === 'dark' ? (
-                    <Sun size={20} strokeWidth={1.5} />
-                ) : (
-                    <Moon size={20} strokeWidth={1.5} />
-                )}
-            </div>
-        </button>
-    );
+  return (
+    <Button
+      variant="outline"
+      size="icon"
+      onClick={toggleTheme}
+      aria-label={theme === 'dark' ? '切换到浅色模式' : '切换到深色模式'}
+      title={theme === 'dark' ? '浅色模式' : '深色模式'}
+    >
+      {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+    </Button>
+  );
 }

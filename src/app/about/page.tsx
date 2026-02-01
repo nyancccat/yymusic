@@ -1,124 +1,109 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import styles from './page.module.css';
-import { Code2, Heart, Github, Activity, Users, Send, MessageCircle } from 'lucide-react';
 import { getSystemStatus } from '@/lib/api';
 import type { SystemStatus } from '@/lib/types';
+import { Activity, Code2, Github, Heart, LayoutGrid, Braces, Wind, Sparkles } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
+const STACK = [
+  { label: 'Next.js', icon: LayoutGrid },
+  { label: 'TypeScript', icon: Braces },
+  { label: 'Tailwind CSS', icon: Wind },
+  { label: 'shadcn/ui', icon: Sparkles },
+];
 
 export default function AboutPage() {
-    const [status, setStatus] = useState<SystemStatus | null>(null);
+  const [status, setStatus] = useState<SystemStatus | null>(null);
 
-    useEffect(() => {
-        getSystemStatus().then(setStatus).catch(console.error);
-    }, []);
+  useEffect(() => {
+    getSystemStatus().then(setStatus).catch(console.error);
+  }, []);
 
-    return (
-        <div className={styles.container}>
-            <div className={styles.logoWrapper}>
-                <img src="/logo.svg" alt="Logo" className={styles.logoIcon} />
-            </div>
-
-            <h1 className={styles.title}>轻听音乐</h1>
-            <div className={styles.version}>
-                Version 1.0.0
-                {status && (
-                    <span className={styles.apiInfo}>
-                        {' • Based on '}
-                        <a
-                            href="https://api.tunefree.fun/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={styles.apiLink}
-                        >
-                            TuneHub API
-                        </a>
-                        {' v' + status.version}
-                    </span>
-                )}
-            </div>
-
-            <p className={styles.description}>
-                一个极简、优雅的在线音乐播放器。
-                <br />
-                专注于纯粹的听歌体验，为您带来身临其境的视听享受。
-            </p>
-
-            {status && (
-                <div className={styles.section}>
-                    <h2 className={styles.sectionTitle}>
-                        <Activity size={24} />
-                        服务状态
-                    </h2>
-                    <div className={styles.statusGrid}>
-                        <div className={styles.statusItem}>
-                            <div className={styles.statusLabel}>运行状态</div>
-                            <div className={styles.statusValue}>
-                                <span className={styles.statusDot} style={{ background: '#10b981' }} />
-                                {status.status}
-                            </div>
-                        </div>
-                        <div className={styles.statusItem}>
-                            <div className={styles.statusLabel}>已运行</div>
-                            <div className={styles.statusValue}>{Math.floor(status.uptime / 3600)} 小时</div>
-                        </div>
-                        <div className={styles.statusItem}>
-                            <div className={styles.statusLabel}>支持平台</div>
-                            <div className={styles.platformTags}>
-                                {status.platforms.filter((p: any) => p.enabled).map((p: any) => (
-                                    <span key={p.name} className={styles.platformTag}>{p.name}</span>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            <div className={styles.section}>
-                <h2 className={styles.sectionTitle}>
-                    <Users size={24} />
-                    加入社群
-                </h2>
-                <div className={styles.communityList}>
-                    <a href="https://t.me/QingJG" target="_blank" rel="noopener noreferrer" className={styles.communityItem}>
-                        <Send size={24} className={styles.communityIcon} style={{ color: '#0088cc' }} />
-                        <div className={styles.communityInfo}>
-                            <div className={styles.communityName}>Telegram 频道</div>
-                            <div className={styles.communityDesc}>@QingJG</div>
-                        </div>
-                    </a>
-                    <a href="https://qm.qq.com/cgi-bin/qm/qr?k=S7aiwtH0mCFgzKRiAph-caj4pzpC0QJU&jump_from=webapi" target="_blank" rel="noopener noreferrer" className={styles.communityItem}>
-                        <MessageCircle size={24} className={styles.communityIcon} style={{ color: '#12b7f5' }} />
-                        <div className={styles.communityInfo}>
-                            <div className={styles.communityName}>QQ 交流群</div>
-                            <div className={styles.communityDesc}>点击加入</div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            <div className={styles.section}>
-                <h2 className={styles.sectionTitle}>
-                    <Code2 size={24} />
-                    技术栈
-                </h2>
-                <div className={styles.stackList}>
-                    <div className={styles.stackItem}>Next.js 14</div>
-                    <div className={styles.stackItem}>TypeScript</div>
-                    <div className={styles.stackItem}>Tailwind CSS</div>
-                    <div className={styles.stackItem}>CSS Modules</div>
-                </div>
-            </div>
-
-            <div className={styles.footer}>
-                <p>Designed & Built with <Heart size={14} fill="currentColor" style={{ display: 'inline', verticalAlign: 'middle', margin: '0 4px', color: 'var(--color-accent)' }} /> by QingJ & Claude & Gemini</p>
-                <div style={{ marginTop: 8 }}>
-                    <a href="https://github.com/QingJ01/QListen" target="_blank" rel="noopener noreferrer" className={styles.link}>
-                        <Github size={16} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />
-                        GitHub
-                    </a>
-                </div>
-            </div>
+  return (
+    <div className="space-y-8">
+      <section className="rounded-3xl border border-border bg-card/70 p-8 text-center">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-glow">
+          <img src="/logo.svg" alt="Logo" className="h-8 w-8" />
         </div>
-    );
+        <h1 className="mt-4 text-2xl font-semibold">余韵音乐</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Version 0.1.12（疯狂迭代修 bug 中）
+          {status && (
+            <span className="ml-2 text-xs text-muted-foreground">
+              • Based on TuneHub API v{status.version}
+            </span>
+          )}
+        </p>
+        <p className="mt-4 text-sm text-muted-foreground">
+          一个极简、优雅的在线音乐播放器。专注于纯粹的听歌体验，为您带来身临其境的视听享受。
+        </p>
+      </section>
+
+      {status && (
+        <section className="rounded-3xl border border-border bg-card/70 p-6">
+          <div className="flex items-center gap-2 text-sm font-semibold">
+            <Activity size={18} className="text-primary" />
+            服务状态
+          </div>
+          <div className="mt-4 grid gap-4 md:grid-cols-3">
+            <div className="rounded-2xl border border-border/60 bg-background/60 p-4">
+              <p className="text-xs text-muted-foreground">运行状态</p>
+              <p className="mt-2 flex items-center gap-2 text-sm">
+                <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                {status.status}
+              </p>
+            </div>
+            <div className="rounded-2xl border border-border/60 bg-background/60 p-4">
+              <p className="text-xs text-muted-foreground">已运行</p>
+              <p className="mt-2 text-sm font-semibold">{Math.floor(status.uptime / 3600)} 小时</p>
+            </div>
+            <div className="rounded-2xl border border-border/60 bg-background/60 p-4">
+              <p className="text-xs text-muted-foreground">支持平台</p>
+              <div className="mt-2 flex flex-wrap gap-2 text-xs">
+                {status.platforms
+                  .filter((platform) => platform.enabled)
+                  .map((platform) => (
+                    <span
+                      key={platform.name}
+                      className="rounded-full border border-border/60 px-2 py-1"
+                    >
+                      {platform.name}
+                    </span>
+                  ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <section className="rounded-3xl border border-border bg-card/70 p-6 text-center">
+        <div className="flex items-center justify-center gap-2 text-sm font-semibold">
+          <Code2 size={18} className="text-primary" />
+          技术栈
+        </div>
+        <div className="mt-6 grid w-full max-w-xl grid-cols-2 gap-7 text-sm sm:grid-cols-4 mx-auto">
+          {STACK.map((item) => {
+            const Icon = item.icon;
+            return (
+              <span
+                key={item.label}
+                className="flex aspect-square w-full flex-col items-center justify-center gap-2 rounded-2xl border border-border/60 bg-background/50 text-xs font-medium"
+              >
+                <Icon size={16} className="text-primary" />
+                {item.label}
+              </span>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="rounded-3xl border border-border bg-card/70 p-6 text-center text-xs text-muted-foreground">
+        <p className="flex flex-wrap items-center justify-center gap-1">
+          Made with
+          <Heart size={12} fill="currentColor" className="text-primary" />
+          yyMusic
+        </p>
+      </section>
+    </div>
+  );
 }

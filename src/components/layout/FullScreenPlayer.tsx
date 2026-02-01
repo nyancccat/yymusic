@@ -1,228 +1,207 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import {
-    X,
-    Play,
-    Pause,
-    SkipBack,
-    SkipForward,
-    ChevronDown,
-    Loader2
-} from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { usePlayer } from '@/context/PlayerContext';
 import { getCoverUrl, getLyrics } from '@/lib/api';
-import { parseLrc, type LyricLine, formatTime } from '@/lib/utils';
-import styles from './FullScreenPlayer.module.css';
+import { type LyricLine, formatTime, parseLrc } from '@/lib/utils';
+import { cn } from '@/lib/utils';
+import { ChevronDown, Loader2, Music2, Pause, Play, SkipBack, SkipForward } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 interface FullScreenPlayerProps {
-    onClose: () => void;
+  onClose: () => void;
 }
 
 export function FullScreenPlayer({ onClose }: FullScreenPlayerProps) {
-    const {
-        currentTrack,
-        isPlaying,
-        togglePlay,
-        next,
-        prev,
-        currentTime,
-        duration,
-        seek,
-        isLoading
-    } = usePlayer();
+  const {
+    currentTrack,
+    isPlaying,
+    togglePlay,
+    next,
+    prev,
+    currentTime,
+    duration,
+    seek,
+    isLoading,
+  } = usePlayer();
 
-    const [lyrics, setLyrics] = useState<LyricLine[]>([]);
-    const [lyricLoading, setLyricLoading] = useState(false);
-    const [isScrubbing, setIsScrubbing] = useState(false);
-    const [scrubTime, setScrubTime] = useState(0);
-    const [coverUrl, setCoverUrl] = useState<string>('');
+  const [lyrics, setLyrics] = useState<LyricLine[]>([]);
+  const [lyricLoading, setLyricLoading] = useState(false);
+  const [isScrubbing, setIsScrubbing] = useState(false);
+  const [scrubTime, setScrubTime] = useState(0);
+  const [coverUrl, setCoverUrl] = useState<string>('');
 
-    const activeLineRef = useRef<HTMLDivElement>(null);
-    const lyricsContainerRef = useRef<HTMLDivElement>(null);
+  const activeLineRef = useRef<HTMLButtonElement>(null);
+  const lyricsContainerRef = useRef<HTMLDivElement>(null);
 
-    // Sync scrubTime when not scrubbing
-    useEffect(() => {
-        if (!isScrubbing) {
-            setScrubTime(currentTime);
-        }
-    }, [currentTime, isScrubbing]);
+  useEffect(() => {
+    if (!isScrubbing) {
+      setScrubTime(currentTime);
+    }
+  }, [currentTime, isScrubbing]);
 
-    // Fetch cover URL
-    useEffect(() => {
-        if (!currentTrack) {
-            setCoverUrl('');
-            return;
-        }
+  useEffect(() => {
+    if (!currentTrack) {
+      setCoverUrl('');
+      return;
+    }
 
-        if (currentTrack.cover) {
-            setCoverUrl(currentTrack.cover);
-            return;
-        }
+    if (currentTrack.cover) {
+      setCoverUrl(currentTrack.cover);
+      return;
+    }
 
-        getCoverUrl(currentTrack.id, currentTrack.platform)
-            .then(url => setCoverUrl(url))
-            .catch(() => setCoverUrl(''));
-    }, [currentTrack]);
+    getCoverUrl(currentTrack.id, currentTrack.platform)
+      .then((url) => setCoverUrl(url))
+      .catch(() => setCoverUrl(''));
+  }, [currentTrack]);
 
-    // Fetch lyrics
-    useEffect(() => {
-        if (!currentTrack) return;
+  useEffect(() => {
+    if (!currentTrack) return;
 
-        async function fetchLyrics() {
-            setLyricLoading(true);
-            try {
-                const lrcText = await getLyrics(currentTrack!.id, currentTrack!.platform);
-                const parsed = parseLrc(lrcText);
-                setLyrics(parsed);
-            } catch {
-                setLyrics([]);
-            } finally {
-                setLyricLoading(false);
-            }
-        }
+    const track = currentTrack;
 
-        // Reset lyrics first
+    async function fetchLyrics() {
+      setLyricLoading(true);
+      try {
+        const lrcText = await getLyrics(track.id, track.platform);
+        const parsed = parseLrc(lrcText);
+        setLyrics(parsed);
+      } catch {
         setLyrics([]);
-        fetchLyrics();
-    }, [currentTrack]);
+      } finally {
+        setLyricLoading(false);
+      }
+    }
 
-    // Find active line
-    const activeLineIndex = lyrics.findIndex((line, index) => {
-        const nextLine = lyrics[index + 1];
-        return currentTime >= line.time && (!nextLine || currentTime < nextLine.time);
-    });
+    setLyrics([]);
+    fetchLyrics();
+  }, [currentTrack]);
 
-    // Auto scroll lyrics
-    useEffect(() => {
-        if (activeLineRef.current && lyricsContainerRef.current) {
-            activeLineRef.current.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center',
-            });
-        }
-    }, [activeLineIndex]);
+  const activeLineIndex = lyrics.findIndex((line, index) => {
+    const nextLine = lyrics[index + 1];
+    return currentTime >= line.time && (!nextLine || currentTime < nextLine.time);
+  });
 
-    const progressPercent = duration > 0 ? ((isScrubbing ? scrubTime : currentTime) / duration) * 100 : 0;
+  useEffect(() => {
+    if (activeLineIndex < 0) return;
+    if (activeLineRef.current && lyricsContainerRef.current) {
+      activeLineRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [activeLineIndex]);
 
-    if (!currentTrack) return null;
+  const progressPercent =
+    duration > 0 ? ((isScrubbing ? scrubTime : currentTime) / duration) * 100 : 0;
 
-    return (
-        <div className={styles.container}>
-            {/* Background Blur */}
-            <div className={styles.background}>
-                {coverUrl && <img src={coverUrl} alt="" className={styles.blurImage} />}
-            </div>
+  if (!currentTrack) return null;
 
-            {/* Header */}
-            <div className={styles.header}>
-                <button className={styles.closeBtn} onClick={onClose}>
-                    <ChevronDown size={28} />
-                </button>
-            </div>
+  return (
+    <div className="fixed inset-0 z-50 flex h-screen w-screen flex-col overflow-hidden bg-background text-foreground">
+      <div className="absolute inset-0">
+        {coverUrl ? (
+          <img src={coverUrl} alt="" className="h-full w-full object-cover opacity-40 blur-3xl" />
+        ) : (
+          <div className="h-full w-full bg-gradient-to-br from-primary/30 via-background to-background" />
+        )}
+      </div>
 
-            {/* Main Content */}
-            <div className={styles.content}>
-                {/* Left: Cover & Info */}
-                <div className={styles.leftColumn}>
-                    <div className={styles.coverWrapper}>
-                        {coverUrl ? (
-                            <img
-                                src={coverUrl}
-                                alt={currentTrack.name}
-                                className={styles.coverImage}
-                            />
-                        ) : (
-                            <div className={styles.coverPlaceholder} />
-                        )}
-                    </div>
-                    <div className={styles.trackInfo}>
-                        <div className={styles.songTitle}>{currentTrack.name}</div>
-                        <div className={styles.artistName}>{currentTrack.artist}</div>
-                        <div className={styles.albumName}>{currentTrack.album || '未知专辑'}</div>
-                    </div>
-                </div>
+      <div className="relative flex items-center justify-between px-6 py-6">
+        <Button variant="outline" size="icon" onClick={onClose}>
+          <ChevronDown size={18} />
+        </Button>
+      </div>
 
-                {/* Right: Lyrics */}
-                <div className={styles.rightColumn}>
-                    <div className={styles.lyricsContainer} ref={lyricsContainerRef}>
-                        {lyricLoading ? (
-                            <div className={styles.lyricLine}>加载歌词中...</div>
-                        ) : lyrics.length === 0 ? (
-                            <div className={styles.lyricLine}>暂无歌词</div>
-                        ) : (
-                            lyrics.map((line, index) => (
-                                <div
-                                    key={index}
-                                    ref={index === activeLineIndex ? activeLineRef : null}
-                                    className={`${styles.lyricLine} ${index === activeLineIndex ? styles.active : ''}`}
-                                    onClick={() => seek(line.time)}
-                                >
-                                    {line.text}
-                                </div>
-                            ))
-                        )}
-                    </div>
-                </div>
-            </div>
-
-            {/* Footer with Controls */}
-            <div className={styles.controls}>
-                {/* Progress Bar */}
-                <div className={styles.progressContainer}>
-                    <div className={styles.timeLabels}>
-                        <span className={styles.time}>{formatTime(isScrubbing ? scrubTime : currentTime)}</span>
-                        <span className={styles.time}>{formatTime(duration)}</span>
-                    </div>
-                    <input
-                        type="range"
-                        min={0}
-                        max={duration || 100}
-                        value={isScrubbing ? scrubTime : currentTime}
-                        onChange={(e) => {
-                            setScrubTime(Number(e.target.value));
-                        }}
-                        onMouseDown={() => setIsScrubbing(true)}
-                        onMouseUp={(e) => {
-                            setIsScrubbing(false);
-                            seek(Number(e.currentTarget.value));
-                        }}
-                        onTouchStart={() => setIsScrubbing(true)}
-                        onTouchEnd={(e) => {
-                            setIsScrubbing(false);
-                            seek(Number(e.currentTarget.value));
-                        }}
-                        className={styles.progressBar}
-                        style={{
-                            background: `linear-gradient(to right, #fff 0%, #fff ${progressPercent}%, rgba(255,255,255,0.2) ${progressPercent}%, rgba(255,255,255,0.2) 100%)`
-                        }}
-                    />
-                </div>
-
-                {/* Buttons */}
-                <div className={styles.buttons}>
-                    <button className={styles.secBtn} onClick={prev} title="上一首">
-                        <SkipBack size={36} strokeWidth={1.5} />
-                    </button>
-
-                    <button
-                        className={styles.mainBtn}
-                        onClick={togglePlay}
-                    >
-                        {isLoading ? (
-                            <Loader2 size={32} className="animate-spin" />
-                        ) : isPlaying ? (
-                            <Pause size={32} fill="currentColor" strokeWidth={0} />
-                        ) : (
-                            <Play size={32} fill="currentColor" strokeWidth={0} style={{ marginLeft: 4 }} />
-                        )}
-                    </button>
-
-                    <button className={styles.secBtn} onClick={next} title="下一首">
-                        <SkipForward size={36} strokeWidth={1.5} />
-                    </button>
-                </div>
-            </div>
+      <div className="relative flex flex-1 flex-col gap-10 px-6 pb-8 lg:flex-row lg:items-center lg:justify-center">
+        <div className="flex flex-1 flex-col items-center gap-6 lg:items-start">
+          <div className="flex h-64 w-64 items-center justify-center overflow-hidden rounded-3xl border border-border/60 bg-secondary shadow-2xl">
+            {coverUrl ? (
+              <img src={coverUrl} alt={currentTrack.name} className="h-full w-full object-cover" />
+            ) : (
+              <Music2 size={48} className="text-muted-foreground" />
+            )}
+          </div>
+          <div className="text-center lg:text-left">
+            <h2 className="text-2xl font-semibold">{currentTrack.name}</h2>
+            <p className="text-sm text-muted-foreground">{currentTrack.artist}</p>
+            <p className="text-xs text-muted-foreground">{currentTrack.album || '未知专辑'}</p>
+          </div>
         </div>
-    );
+
+        <div className="flex flex-1 flex-col">
+          <div
+            ref={lyricsContainerRef}
+            className="max-h-[360px] space-y-4 overflow-y-auto rounded-3xl border border-border/60 bg-card/80 p-6"
+          >
+            {lyricLoading ? (
+              <div className="flex items-center justify-center text-muted-foreground">
+                <Loader2 size={28} className="animate-spin" />
+              </div>
+            ) : lyrics.length === 0 ? (
+              <div className="text-center text-sm text-muted-foreground">暂无歌词</div>
+            ) : (
+              lyrics.map((line, index) => (
+                <button
+                  type="button"
+                  key={`${line.time}-${line.text}`}
+                  ref={index === activeLineIndex ? activeLineRef : null}
+                  className={cn(
+                    'w-full text-left text-sm text-muted-foreground transition',
+                    index === activeLineIndex && 'text-lg font-semibold text-foreground text-glow'
+                  )}
+                  onClick={() => seek(line.time)}
+                >
+                  {line.text}
+                </button>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="relative border-t border-border/60 bg-card/80 px-6 py-6">
+        <div className="mb-4 flex items-center justify-between text-xs text-muted-foreground">
+          <span>{formatTime(isScrubbing ? scrubTime : currentTime)}</span>
+          <span>{formatTime(duration)}</span>
+        </div>
+        <input
+          type="range"
+          min={0}
+          max={duration || 100}
+          value={isScrubbing ? scrubTime : currentTime}
+          onChange={(e) => setScrubTime(Number(e.target.value))}
+          onMouseDown={() => setIsScrubbing(true)}
+          onMouseUp={(e) => {
+            setIsScrubbing(false);
+            seek(Number(e.currentTarget.value));
+          }}
+          onTouchStart={() => setIsScrubbing(true)}
+          onTouchEnd={(e) => {
+            setIsScrubbing(false);
+            seek(Number(e.currentTarget.value));
+          }}
+          className="w-full accent-primary"
+          style={{
+            background: `linear-gradient(to right, hsl(var(--primary)) 0%, hsl(var(--primary)) ${progressPercent}%, rgba(255,255,255,0.2) ${progressPercent}%, rgba(255,255,255,0.2) 100%)`,
+          }}
+        />
+        <div className="mt-6 flex items-center justify-center gap-6">
+          <Button variant="ghost" size="icon" onClick={prev} title="上一首">
+            <SkipBack size={24} />
+          </Button>
+          <Button variant="accent" size="icon" className="h-14 w-14" onClick={togglePlay}>
+            {isLoading ? (
+              <Loader2 size={24} className="animate-spin" />
+            ) : isPlaying ? (
+              <Pause size={24} fill="currentColor" strokeWidth={0} />
+            ) : (
+              <Play size={24} fill="currentColor" strokeWidth={0} className="ml-1" />
+            )}
+          </Button>
+          <Button variant="ghost" size="icon" onClick={next} title="下一首">
+            <SkipForward size={24} />
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
 }

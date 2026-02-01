@@ -1,44 +1,40 @@
 'use client';
 
-import { Heart } from 'lucide-react';
-import { useFavorites } from '@/context/FavoritesContext';
 import { SongList } from '@/components/business';
-import styles from './page.module.css';
+import { Button } from '@/components/ui/button';
+import { useFavorites } from '@/context/FavoritesContext';
+import { Heart } from 'lucide-react';
+import Link from 'next/link';
 
 export default function FavoritesPage() {
-    const { favorites } = useFavorites();
+  const { favorites } = useFavorites();
 
-    const songs = favorites.map((track) => ({
-        id: track.id,
-        name: track.name,
-        artist: track.artist,
-        album: track.album,
-        platform: track.platform,
-        cover: track.cover,
-    }));
+  const songs = favorites.map((track) => ({
+    id: track.id,
+    name: track.name,
+    artist: track.artist,
+    album: track.album,
+    platform: track.platform,
+    cover: track.cover,
+  }));
 
-    return (
-        <div className={styles.page}>
-            <header className={styles.header}>
-                <h1 className={styles.title}>我喜欢</h1>
-                <p className={styles.subtitle}>
-                    {favorites.length > 0
-                        ? `${favorites.length} 首收藏歌曲`
-                        : '你收藏的歌曲'}
-                </p>
-            </header>
-
-            {favorites.length === 0 ? (
-                <div className={styles.empty}>
-                    <Heart size={48} className={styles.emptyIcon} />
-                    <p>暂无收藏</p>
-                    <p className={styles.hint}>
-                        点击歌曲旁边的 ♡ 按钮将歌曲添加到收藏
-                    </p>
-                </div>
-            ) : (
-                <SongList songs={songs} showAlbum={true} />
-            )}
+  return (
+    <div className="space-y-6">
+      {favorites.length === 0 ? (
+        <div className="flex flex-col items-center gap-3 rounded-3xl border border-border bg-card/70 p-10 text-center text-muted-foreground">
+          <Heart size={40} />
+          <p className="text-sm">暂无收藏</p>
+          <p className="text-xs">点击歌曲旁边的 ♡ 按钮将歌曲添加到收藏</p>
+          <Button variant="outline" asChild>
+            <Link href="/search">去搜索歌曲</Link>
+          </Button>
         </div>
-    );
+      ) : (
+        <div className="space-y-4">
+          <p className="text-xs text-muted-foreground">{favorites.length} 首收藏歌曲</p>
+          <SongList songs={songs} showAlbum />
+        </div>
+      )}
+    </div>
+  );
 }
