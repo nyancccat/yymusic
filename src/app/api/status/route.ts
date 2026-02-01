@@ -3,6 +3,14 @@ import { NextResponse } from 'next/server';
 const TUNEHUB_API_URL = 'https://tunehub.sayqz.com/api';
 const CACHE_TTL = 60;
 
+async function getDefaultCache(): Promise<Cache | null> {
+  if (!('caches' in globalThis)) return null;
+  if ('open' in caches && typeof caches.open === 'function') {
+    return caches.open('default');
+  }
+  return null;
+}
+
 function hashString(input: string): string {
   let hash = 2166136261;
   for (let i = 0; i < input.length; i += 1) {
@@ -14,8 +22,7 @@ function hashString(input: string): string {
 
 export async function GET() {
   try {
-    const cache =
-      'caches' in globalThis ? (caches as CacheStorage).default : null;
+    const cache = await getDefaultCache();
     let cacheKeyRequest: Request | null = null;
 
     if (cache) {

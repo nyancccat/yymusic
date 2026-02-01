@@ -36,6 +36,14 @@ function getCacheTtl(url: string): number {
   return 0;
 }
 
+async function getDefaultCache(): Promise<Cache | null> {
+  if (!('caches' in globalThis)) return null;
+  if ('open' in caches && typeof caches.open === 'function') {
+    return caches.open('default');
+  }
+  return null;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { url, method, headers, body } = await request.json();
@@ -57,8 +65,7 @@ export async function POST(request: NextRequest) {
       /authorization|cookie|x-api-key/i.test(key)
     );
     const ttl = isSensitive ? 0 : getCacheTtl(url);
-    const cache =
-      ttl > 0 && 'caches' in globalThis ? (caches as CacheStorage).default : null;
+    const cache = ttl > 0 ? await getDefaultCache() : null;
     let cacheKeyRequest: Request | null = null;
 
     if (cache) {
