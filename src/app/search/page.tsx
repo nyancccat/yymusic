@@ -53,21 +53,23 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col gap-4 rounded-3xl border border-border bg-card/70 p-6">
-        <div className="relative">
-          <SearchIcon
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-            size={18}
-          />
-          <Input
-            type="text"
-            className="pl-10"
-            placeholder="搜索歌曲、艺人、专辑"
-            value={query}
-            onChange={handleInputChange}
-            autoFocus
-          />
+    <div className="space-y-6">
+      <div className="sticky top-0 z-20 -mx-4 bg-background/90 px-4 pt-2 pb-4 backdrop-blur md:static md:mx-0 md:bg-transparent md:px-0 md:pt-0 md:pb-0 md:backdrop-blur-0">
+        <div className="flex flex-col gap-4 rounded-3xl border border-border bg-card/70 p-5 md:p-6">
+          <div className="relative">
+            <SearchIcon
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+              size={18}
+            />
+            <Input
+              type="text"
+              className="pl-10"
+              placeholder="搜索歌曲、艺人、专辑"
+              value={query}
+              onChange={handleInputChange}
+              autoFocus
+            />
+          </div>
         </div>
       </div>
 

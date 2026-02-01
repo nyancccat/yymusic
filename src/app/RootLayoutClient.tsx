@@ -24,8 +24,8 @@ function AppContent({ children }: { children: React.ReactNode }) {
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar />
         <div className="flex min-h-0 flex-1">
-          <main className="relative flex-1 overflow-y-auto px-5 pb-52 pt-6 md:px-8 md:pb-40 lg:pb-24">
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-primary/15 via-transparent to-transparent" />
+          <main className="relative flex-1 overflow-y-auto px-4 pb-[calc(var(--bottom-space)+env(safe-area-inset-bottom))] pt-4 md:px-8 md:pt-6">
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-primary/15 via-transparent to-transparent md:h-40" />
             <div className="pointer-events-none absolute inset-0 bg-grid opacity-20" />
             <div className="relative">{children}</div>
           </main>

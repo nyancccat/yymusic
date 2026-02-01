@@ -33,26 +33,30 @@ export function TopBar() {
   }, [pathname]);
 
   return (
-    <header className="flex flex-col gap-4 border-b border-border/60 bg-background/80 px-5 py-5 backdrop-blur-xl md:flex-row md:items-center md:justify-between md:px-8">
+    <header className="flex flex-col gap-3 border-b border-border/60 bg-background/80 px-4 py-4 backdrop-blur-xl md:flex-row md:items-center md:justify-between md:gap-4 md:px-8 md:py-5">
       <div>
-        <p className="text-xs uppercase tracking-[0.32em] text-muted-foreground">yyMusic</p>
-        <h1 className="mt-2 font-display text-2xl font-semibold text-foreground md:text-3xl">
+        <p className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground md:text-xs">
+          yyMusic
+        </p>
+        <h1 className="mt-2 truncate font-display text-xl font-semibold leading-tight text-foreground md:text-3xl">
           {header.title}
         </h1>
-        <p className="mt-1 text-sm text-muted-foreground">{header.subtitle}</p>
+        <p className="mt-1 truncate text-xs text-muted-foreground md:text-sm">
+          {header.subtitle}
+        </p>
       </div>
 
       <div className="flex w-full flex-col gap-3 md:w-auto md:flex-row md:items-center">
         <button
           type="button"
           className={cn(
-            'group flex w-full items-center gap-3 rounded-full border border-border bg-card/80 px-4 py-2 text-sm text-muted-foreground transition hover:border-primary/60 hover:text-foreground md:w-72',
+            'group flex w-full items-center gap-3 rounded-full border border-border bg-card/80 px-4 py-2 text-xs text-muted-foreground transition hover:border-primary/60 hover:text-foreground md:w-72 md:text-sm',
             pathname === '/search' && 'border-primary/70 text-foreground'
           )}
           onClick={() => router.push('/search')}
         >
           <Search size={16} />
-          <span className="text-sm">搜索歌曲、艺人、专辑</span>
+          <span className="min-w-0 truncate text-xs md:text-sm">搜索歌曲、艺人、专辑</span>
         </button>
 
         <div className="flex items-center gap-2">

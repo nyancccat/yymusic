@@ -46,13 +46,13 @@ export default function HomePage() {
   }, [platform]);
 
   return (
-    <div className="space-y-10">
-      <section className="relative overflow-hidden rounded-3xl border border-border bg-card/70 p-8">
+    <div className="space-y-8 md:space-y-10">
+      <section className="relative overflow-hidden rounded-3xl border border-border bg-card/70 p-6 md:p-8">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-transparent" />
-        <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div className="relative flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-3">
             <p className="text-xs uppercase tracking-[0.32em] text-muted-foreground">沉浸式精选</p>
-            <h2 className="font-display text-3xl font-semibold md:text-4xl">
+            <h2 className="font-display text-2xl font-semibold md:text-4xl">
               黑金听境 · 余韵女神的祝福
             </h2>
             <p className="max-w-xl text-sm text-muted-foreground">

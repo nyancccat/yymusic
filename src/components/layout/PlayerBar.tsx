@@ -113,7 +113,7 @@ export function PlayerBar() {
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div className="fixed bottom-16 left-0 right-0 z-50 border-t border-border/60 bg-card/90 backdrop-blur-xl lg:bottom-0">
+    <div className="fixed bottom-[calc(var(--mobile-nav-height)+env(safe-area-inset-bottom))] left-0 right-0 z-50 border-t border-border/60 bg-card/90 backdrop-blur-xl lg:bottom-0">
       <div className="px-4 py-2 md:px-8 md:py-3">
         <div className="flex items-center gap-3 md:hidden">
           <button

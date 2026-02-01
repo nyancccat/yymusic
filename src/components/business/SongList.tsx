@@ -64,7 +64,7 @@ export function SongList({
     <div className="space-y-2">
       {showHeader && (
         <div
-          className="grid items-center gap-3 text-xs uppercase tracking-[0.18em] text-muted-foreground"
+          className="grid items-center gap-2 text-xs uppercase tracking-[0.18em] text-muted-foreground md:gap-3"
           style={{ gridTemplateColumns }}
         >
           <span>#</span>
@@ -79,7 +79,7 @@ export function SongList({
         <div
           key={`${song.platform}-${song.id}`}
           className={cn(
-            'group grid items-center gap-3 rounded-xl border border-transparent px-2 py-2 transition hover:border-primary/60 hover:bg-secondary/40',
+            'group grid items-center gap-2 rounded-xl border border-transparent px-2 py-3 transition hover:border-primary/60 hover:bg-secondary/40 md:gap-3 md:py-2',
             isCurrentSong(song) && 'border-primary/60 bg-secondary/60'
           )}
           style={{ gridTemplateColumns }}
@@ -102,7 +102,7 @@ export function SongList({
 
           <div className="flex items-center gap-3">
             {showCover && (
-              <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg bg-secondary">
+              <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-lg bg-secondary md:h-10 md:w-10">
                 {song.cover ? (
                   <img src={song.cover} alt={song.name} className="h-full w-full object-cover" />
                 ) : (

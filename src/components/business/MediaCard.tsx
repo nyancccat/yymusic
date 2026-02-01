@@ -18,13 +18,13 @@ export function MediaCard({ title, subtitle, imageUrl, onPlay }: MediaCardProps)
   };
 
   return (
-    <div className="group flex flex-col gap-3 rounded-2xl border border-border/60 bg-card/80 p-3 transition hover:border-primary/70 hover:shadow-glow">
+    <div className="group flex flex-col gap-2 rounded-2xl border border-border/60 bg-card/80 p-2.5 transition hover:border-primary/70 hover:shadow-glow md:gap-3 md:p-3">
       <div className="relative overflow-hidden rounded-xl bg-secondary">
         {imageUrl ? (
           <img
             src={imageUrl}
             alt={title}
-            className="h-40 w-full object-cover transition group-hover:scale-105"
+            className="h-36 w-full object-cover transition group-hover:scale-105 md:h-40"
           />
         ) : (
           <div className="flex h-40 items-center justify-center text-muted-foreground">

@@ -23,6 +23,9 @@
   --input: 40 16% 80%;
   --ring: 45 100% 45%;
   --radius: 0.9rem;
+  --mobile-nav-height: 64px;
+  --mobile-player-height: 56px;
+  --bottom-space: calc(var(--mobile-nav-height) + var(--mobile-player-height));
 }
 
 .dark {
@@ -63,6 +66,12 @@
 
   a {
     @apply text-inherit no-underline;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --bottom-space: 88px;
   }
 }
 
