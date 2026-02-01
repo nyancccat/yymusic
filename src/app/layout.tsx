@@ -16,11 +16,10 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   title: {
-    default: '余韵音乐 (yyMusic) - 极简、优雅的在线音乐播放器',
-    template: '%s | 余韵音乐 (yyMusic)',
+    default: '余韵音乐',
+    template: '%s · 余韵音乐',
   },
-  description:
-    '余韵音乐 (yyMusic) 是一款现代化在线音乐播放器，拥有极简的 Apple Music 交互风格。支持多平台搜索、实时歌词显示、沉浸式播放体验，为您带来身临其境的视听享受。',
+  description: '轻声入耳，余韵常在。',
   keywords: [
     '余韵音乐',
     'yyMusic',
@@ -40,9 +39,9 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'zh_CN',
     url: 'https://music.byebug.cn',
-    title: '余韵音乐 (yyMusic) - 极简、优雅的在线音乐播放器',
-    description: '一个沉浸式在线音乐播放器，支持全网搜索与实时歌词。',
-    siteName: '余韵音乐 (yyMusic)',
+    title: '余韵音乐',
+    description: '轻声入耳，余韵常在。',
+    siteName: '余韵音乐',
     images: [
       {
         url: 'https://music.byebug.cn/logo.svg',
@@ -54,8 +53,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: '余韵音乐 (yyMusic) - 极简、优雅的在线音乐播放器',
-    description: '一个仿 Apple Music 风格的沉浸式在线音乐播放器，支持全网搜索与实时歌词。',
+    title: '余韵音乐',
+    description: '轻声入耳，余韵常在。',
     images: ['https://music.byebug.cn/logo.svg'],
   },
   icons: {

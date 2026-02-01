@@ -46,17 +46,15 @@ export function TopBar() {
 
       <div className="flex w-full flex-col gap-3 md:w-auto md:flex-row md:items-center">
         {pathname !== '/search' && (
-          <button
-            type="button"
-            className={cn(
-              'group hidden items-center gap-3 rounded-full border border-border bg-card/80 px-4 py-2 text-xs text-muted-foreground transition hover:border-primary/60 hover:text-foreground md:flex md:w-72 md:text-sm',
-              pathname === '/search' && 'border-primary/70 text-foreground'
-            )}
+          <Button
+            variant="outline"
+            size="icon"
+            className="hidden md:inline-flex transition hover:border-primary/70 hover:text-primary hover:shadow-glow"
             onClick={() => router.push('/search')}
+            aria-label="搜索"
           >
             <Search size={16} />
-            <span className="min-w-0 truncate text-xs md:text-sm">搜索歌曲、艺人、专辑</span>
-          </button>
+          </Button>
         )}
 
         <div className="flex items-center gap-2">

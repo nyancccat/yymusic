@@ -1,9 +1,6 @@
 'use client';
 
-import { getSystemStatus } from '@/lib/api';
-import type { SystemStatus } from '@/lib/types';
-import { Activity, Code2, Heart, LayoutGrid, Braces, Wind, Sparkles } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Code2, Heart, LayoutGrid, Braces, Wind, Sparkles, ShieldCheck } from 'lucide-react';
 
 const STACK = [
   { label: 'Next.js', icon: LayoutGrid },
@@ -13,12 +10,6 @@ const STACK = [
 ];
 
 export default function AboutPage() {
-  const [status, setStatus] = useState<SystemStatus | null>(null);
-
-  useEffect(() => {
-    getSystemStatus().then(setStatus).catch(console.error);
-  }, []);
-
   return (
     <div className="space-y-6">
       <section className="rounded-3xl border border-border bg-card/70 p-7 text-center md:p-8">
@@ -28,41 +19,26 @@ export default function AboutPage() {
         <h1 className="mt-4 text-2xl font-semibold">余韵音乐</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Version 0.1.12（疯狂迭代修 bug 中）
-          {status && (
-            <span className="ml-2 text-xs text-muted-foreground">
-              • Based on TuneHub API v{status.version}
-            </span>
-          )}
         </p>
         <p className="mt-3 text-sm text-muted-foreground">
-          极简、优雅的在线音乐播放器，专注于纯粹的听歌体验。
+          轻声入耳，余韵常在。
         </p>
       </section>
 
       <div className="grid gap-4 md:grid-cols-3">
-        <section className="rounded-3xl border border-border bg-card/70 p-6">
-          <div className="flex items-center gap-2 text-sm font-semibold">
-            <Activity size={18} className="text-primary" />
+        <section className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card/70 p-6 text-center">
+          <ShieldCheck
+            size={150}
+            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-primary/10"
+          />
+          <div className="flex items-center justify-center gap-2 text-sm font-semibold">
+            <ShieldCheck size={18} className="text-primary" />
             服务状态
           </div>
-          <div className="mt-4 space-y-3 text-sm text-muted-foreground">
-            {status ? (
-              <>
-                <div className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                  {status.status}
-                </div>
-                <p>已运行 {Math.floor(status.uptime / 3600)} 小时</p>
-                <p>
-                  支持 {status.platforms.filter((platform) => platform.enabled).length} 个平台
-                </p>
-              </>
-            ) : (
-              <>
-                <p>状态加载中…</p>
-                <p>正在获取服务信息</p>
-              </>
-            )}
+          <div className="mt-4 flex flex-1 flex-col items-center justify-center gap-2 text-xs text-muted-foreground">
+            <div className="text-sm font-medium text-foreground">运行十分健康</div>
+            <p>响应稳定 · 低延迟</p>
+            <p>服务状态 · 满格</p>
           </div>
         </section>
 
@@ -87,13 +63,20 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="rounded-3xl border border-border bg-card/70 p-6 text-center text-xs text-muted-foreground">
-          <p className="flex flex-wrap items-center justify-center gap-1">
-            Made with
-            <Heart size={12} fill="currentColor" className="text-primary" />
-            yyMusic
-          </p>
-          <p className="mt-2 text-xs text-muted-foreground">感谢每一位正在使用它的你</p>
+        <section className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card/70 p-6 text-center text-xs text-muted-foreground">
+          <Heart
+            size={140}
+            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-primary/10"
+            fill="currentColor"
+          />
+          <div className="flex items-center justify-center gap-2 text-sm font-semibold text-foreground">
+            <Sparkles size={18} className="text-primary" />
+            为你而作
+          </div>
+          <div className="mt-4 flex flex-1 flex-col items-center justify-center gap-3">
+            <div className="text-sm font-medium text-foreground">Made with yyMusic</div>
+            <p className="text-xs text-muted-foreground">谢谢你，让音乐更有温度。</p>
+          </div>
         </section>
       </div>
     </div>
