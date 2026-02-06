@@ -19,7 +19,7 @@ function AppContent({ children }: { children: React.ReactNode }) {
   const { showLyrics, showFullScreen, setShowFullScreen, setShowLyrics } = useLyrics();
 
   return (
-    <div className="relative flex min-h-screen w-screen min-h-[100dvh] overflow-hidden bg-background text-foreground">
+    <div className="relative flex h-screen h-[100dvh] w-screen overflow-hidden bg-background text-foreground">
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar />
