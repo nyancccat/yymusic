@@ -18,6 +18,21 @@ import type {
 // =============================================================================
 
 const TUNEHUB_API_URL = 'https://tunehub.sayqz.com/api';
+const SONG_INFO_CACHE_LIMIT = 200;
+const songInfoCache = new Map<string, SongInfo>();
+const songInfoPromiseCache = new Map<string, Promise<SongInfo>>();
+
+function getSongInfoCacheKey(id: string, platform: MusicPlatform, quality: AudioQuality): string {
+  return `${platform}:${quality}:${id}`;
+}
+
+function setSongInfoCache(key: string, value: SongInfo) {
+  songInfoCache.set(key, value);
+  if (songInfoCache.size > SONG_INFO_CACHE_LIMIT) {
+    const firstKey = songInfoCache.keys().next().value;
+    if (firstKey) songInfoCache.delete(firstKey);
+  }
+}
 
 // =============================================================================
 // Method Dispatch Helper
@@ -221,22 +236,41 @@ export async function getSongInfo(
   platform: MusicPlatform = 'netease',
   quality: AudioQuality = '320k'
 ): Promise<SongInfo> {
-  const parsed = await parseSongs(id, platform, quality);
-  // TuneHub V3 返回结构: data.data[].info, data.data[].cover, data.data[].lyrics
-  const songData = parsed.data?.[0];
+  const cacheKey = getSongInfoCacheKey(id, platform, quality);
+  const cached = songInfoCache.get(cacheKey);
+  if (cached) return cached;
 
-  if (!songData || !songData.success) {
-    throw new Error('Song not found');
+  const inFlight = songInfoPromiseCache.get(cacheKey);
+  if (inFlight) return inFlight;
+
+  const promise = (async () => {
+    const parsed = await parseSongs(id, platform, quality);
+    // TuneHub V3 返回结构: data.data[].info, data.data[].cover, data.data[].lyrics
+    const songData = parsed.data?.[0];
+
+    if (!songData || !songData.success) {
+      throw new Error('Song not found');
+    }
+
+    const result = {
+      name: songData.info?.name || '',
+      artist: songData.info?.artist || '',
+      album: songData.info?.album || '',
+      url: toProxyUrl(songData.url),
+      pic: songData.cover ? toProxyUrl(songData.cover) : '',
+      lrc: songData.lyrics || '',
+    };
+
+    setSongInfoCache(cacheKey, result);
+    return result;
+  })();
+
+  songInfoPromiseCache.set(cacheKey, promise);
+  try {
+    return await promise;
+  } finally {
+    songInfoPromiseCache.delete(cacheKey);
   }
-
-  return {
-    name: songData.info?.name || '',
-    artist: songData.info?.artist || '',
-    album: songData.info?.album || '',
-    url: toProxyUrl(songData.url),
-    pic: songData.cover ? toProxyUrl(songData.cover) : '',
-    lrc: songData.lyrics || '',
-  };
 }
 
 /**

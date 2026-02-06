@@ -31,7 +31,7 @@ export function TopBar() {
   }, [pathname]);
 
   return (
-    <header className="flex flex-col gap-3 border-b border-border/60 bg-background/80 px-4 py-4 backdrop-blur-xl md:flex-row md:items-center md:justify-between md:gap-4 md:px-8 md:py-5">
+    <header className="flex flex-col gap-3 border-b border-border/60 bg-background/90 px-4 py-4 backdrop-blur-md md:flex-row md:items-center md:justify-between md:gap-4 md:px-8 md:py-5 md:backdrop-blur-xl">
       <div>
         <p className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground md:text-xs">
           yyMusic
@@ -45,19 +45,29 @@ export function TopBar() {
       </div>
 
       <div className="flex w-full flex-col gap-3 md:w-auto md:flex-row md:items-center">
-        {pathname !== '/search' && (
-          <Button
-            variant="outline"
-            size="icon"
-            className="hidden md:inline-flex transition hover:border-primary/70 hover:text-primary hover:shadow-glow"
-            onClick={() => router.push('/search')}
-            aria-label="搜索"
-          >
-            <Search size={16} />
-          </Button>
-        )}
-
         <div className="flex items-center gap-2">
+          {pathname !== '/search' && (
+            <Button
+              variant="outline"
+              size="icon"
+              className="md:hidden"
+              onClick={() => router.push('/search')}
+              aria-label="搜索"
+            >
+              <Search size={16} />
+            </Button>
+          )}
+          {pathname !== '/search' && (
+            <Button
+              variant="outline"
+              size="icon"
+              className="hidden md:inline-flex transition hover:border-primary/70 hover:text-primary hover:shadow-glow"
+              onClick={() => router.push('/search')}
+              aria-label="搜索"
+            >
+              <Search size={16} />
+            </Button>
+          )}
           <Button
             variant={showLyrics ? 'accent' : 'outline'}
             size="icon"

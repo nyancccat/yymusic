@@ -25,6 +25,8 @@ export function MediaCard({ title, subtitle, imageUrl, onPlay }: MediaCardProps)
             src={imageUrl}
             alt={title}
             className="h-36 w-full object-cover transition group-hover:scale-105 md:h-40"
+            loading="lazy"
+            decoding="async"
           />
         ) : (
           <div className="flex h-40 items-center justify-center text-muted-foreground">

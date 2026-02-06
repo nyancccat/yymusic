@@ -98,7 +98,7 @@ export function FullScreenPlayer({ onClose }: FullScreenPlayerProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex h-screen w-screen flex-col overflow-hidden bg-background text-foreground"
+      className="fixed inset-0 z-50 flex h-screen w-screen flex-col overflow-hidden bg-background text-foreground pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]"
       onTouchStart={(event) => {
         const target = event.target as HTMLElement | null;
         if (target?.closest('[data-swipe-ignore="true"]')) {

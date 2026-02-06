@@ -5,6 +5,7 @@ import { usePlayer } from '@/context/PlayerContext';
 import type { MusicPlatform, Track } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Heart, Music2, Play, Volume2 } from 'lucide-react';
+import type { CSSProperties } from 'react';
 
 interface SongListItem {
   id: string;
@@ -34,7 +35,8 @@ export function SongList({
   const { currentTrack, isPlaying, setPlaylist } = usePlayer();
   const { isFavorite, toggleFavorite } = useFavorites();
 
-  const gridTemplateColumns = [
+  const mobileColumns = ['32px', 'minmax(0,1fr)', '56px'].join(' ');
+  const desktopColumns = [
     '32px',
     'minmax(0,1fr)',
     showAlbum ? '200px' : null,
@@ -43,6 +45,10 @@ export function SongList({
   ]
     .filter(Boolean)
     .join(' ');
+  const gridStyle = {
+    '--grid-cols-mobile': mobileColumns,
+    '--grid-cols-desktop': desktopColumns,
+  } as CSSProperties;
 
   const handleSongClick = (index: number) => {
     const tracks: Track[] = songs.map((song) => ({
@@ -64,14 +70,14 @@ export function SongList({
     <div className="space-y-2">
       {showHeader && (
         <div
-          className="grid items-center gap-2 text-xs uppercase tracking-[0.18em] text-muted-foreground md:gap-3"
-          style={{ gridTemplateColumns }}
+          className="grid items-center gap-2 text-xs uppercase tracking-[0.18em] text-muted-foreground md:gap-3 [grid-template-columns:var(--grid-cols-mobile)] md:[grid-template-columns:var(--grid-cols-desktop)]"
+          style={gridStyle}
         >
           <span>#</span>
           <span>标题</span>
-          {showAlbum && <span>专辑</span>}
+          {showAlbum && <span className="hidden md:block">专辑</span>}
           <span className="text-center">收藏</span>
-          {showDuration && <span className="text-right">时长</span>}
+          {showDuration && <span className="hidden text-right md:block">时长</span>}
         </div>
       )}
 
@@ -79,10 +85,10 @@ export function SongList({
         <div
           key={`${song.platform}-${song.id}`}
           className={cn(
-            'group grid items-center gap-2 rounded-xl border border-transparent px-2 py-3 transition hover:border-primary/60 hover:bg-secondary/40 md:gap-3 md:py-2',
+            'group grid items-center gap-2 rounded-xl border border-transparent px-2 py-3 transition hover:border-primary/60 hover:bg-secondary/40 md:gap-3 md:py-2 [grid-template-columns:var(--grid-cols-mobile)] md:[grid-template-columns:var(--grid-cols-desktop)]',
             isCurrentSong(song) && 'border-primary/60 bg-secondary/60'
           )}
-          style={{ gridTemplateColumns }}
+          style={gridStyle}
         >
           <div className="flex items-center justify-center text-xs text-muted-foreground">
             {isCurrentSong(song) && isPlaying ? (
@@ -90,7 +96,7 @@ export function SongList({
             ) : (
               <button
                 type="button"
-                className="flex h-7 w-7 items-center justify-center rounded-full border border-border/60 text-xs text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-border/60 text-xs text-muted-foreground transition hover:bg-secondary hover:text-foreground md:h-7 md:w-7"
                 onClick={() => handleSongClick(index)}
                 aria-label={`播放 ${song.name}`}
               >
@@ -104,7 +110,13 @@ export function SongList({
             {showCover && (
               <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-lg bg-secondary md:h-10 md:w-10">
                 {song.cover ? (
-                  <img src={song.cover} alt={song.name} className="h-full w-full object-cover" />
+                  <img
+                    src={song.cover}
+                    alt={song.name}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                  />
                 ) : (
                   <Music2 size={16} className="text-muted-foreground" />
                 )}
@@ -122,14 +134,16 @@ export function SongList({
           </div>
 
           {showAlbum && (
-            <div className="truncate text-xs text-muted-foreground">{song.album || '-'}</div>
+            <div className="hidden truncate text-xs text-muted-foreground md:block">
+              {song.album || '-'}
+            </div>
           )}
 
           <div className="flex items-center justify-center">
             <button
               type="button"
               className={cn(
-                'flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-secondary',
+                'flex h-9 w-9 items-center justify-center rounded-full transition hover:bg-secondary md:h-8 md:w-8',
                 isFavorite(song.id, song.platform) && 'text-primary'
               )}
               onClick={(e) => {
@@ -154,7 +168,7 @@ export function SongList({
           </div>
 
           {showDuration && (
-            <div className="text-right text-xs text-muted-foreground">
+            <div className="hidden text-right text-xs text-muted-foreground md:block">
               {song.duration ? formatDuration(song.duration) : '-'}
             </div>
           )}

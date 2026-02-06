@@ -133,10 +133,15 @@ export function PlayerBar() {
 
   return (
     <div
-      className="fixed bottom-[calc(var(--mobile-nav-height)+env(safe-area-inset-bottom))] left-0 right-0 z-50 border-t border-border/60 bg-card/90 backdrop-blur-xl lg:bottom-0"
+      className="fixed bottom-[calc(var(--mobile-nav-height)+env(safe-area-inset-bottom))] left-0 right-0 z-50 min-h-[var(--mobile-player-height)] border-t border-border/60 bg-card/95 backdrop-blur-md lg:bottom-0 lg:backdrop-blur-xl"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
+      <div className="md:hidden">
+        <div className="h-1 w-full bg-secondary">
+          <div className="h-full bg-primary" style={{ width: `${progress}%` }} />
+        </div>
+      </div>
       <div className="px-4 py-2 md:px-8 md:py-3">
         <div className="flex items-center gap-3 md:hidden">
           <button

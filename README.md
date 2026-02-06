@@ -68,7 +68,11 @@ cd yyMusic
 # 3. 安装依赖
 npm install
 
-# 4. 启动开发服务器
+# 4. 配置环境变量
+cp .env.example .env.local
+# 在 .env.local 中填写 TUNEHUB_API_KEY
+
+# 5. 启动开发服务器
 npm run dev
 ```
 

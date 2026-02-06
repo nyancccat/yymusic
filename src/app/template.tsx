@@ -1,5 +1,9 @@
 'use client';
 
 export default function Template({ children }: { children: React.ReactNode }) {
-  return <div className="animate-[fade-in_0.4s_ease-out]">{children}</div>;
+  return (
+    <div className="animate-[fade-in_0.4s_ease-out] motion-reduce:animate-none">
+      {children}
+    </div>
+  );
 }

@@ -2,6 +2,8 @@
 
 import { Code2, Heart, LayoutGrid, Braces, Wind, Sparkles, ShieldCheck } from 'lucide-react';
 
+const APP_VERSION = process.env.NEXT_PUBLIC_APP_VERSION || '0.1.0';
+
 const STACK = [
   { label: 'Next.js', icon: LayoutGrid },
   { label: 'TypeScript', icon: Braces },
@@ -18,7 +20,7 @@ export default function AboutPage() {
         </div>
         <h1 className="mt-4 text-2xl font-semibold">余韵音乐</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Version 0.1.12（疯狂迭代修 bug 中）
+          Version {APP_VERSION}（疯狂迭代修 bug 中）
         </p>
         <p className="mt-3 text-sm text-muted-foreground">
           轻声入耳，余韵常在。

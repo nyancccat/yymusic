@@ -67,7 +67,8 @@ export default function SearchPage() {
               placeholder="搜索歌曲、艺人、专辑"
               value={query}
               onChange={handleInputChange}
-              autoFocus
+              inputMode="search"
+              enterKeyHint="search"
             />
           </div>
         </div>
