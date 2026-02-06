@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { usePlayer } from '@/context/PlayerContext';
 import { getTopListSongs } from '@/lib/api';
 import type { MusicPlatform, PlaylistSong, Track } from '@/lib/types';
+import { storage } from '@/lib/utils';
 import { ChevronLeft, Loader2, Music2, Play } from 'lucide-react';
 import Link from 'next/link';
 import { use, useEffect, useState } from 'react';
@@ -16,6 +17,29 @@ interface TopListPageProps {
   }>;
 }
 
+const TOPLIST_SONGS_CACHE_PREFIX = 'toplist_songs_cache:';
+const TOPLIST_TIMEOUT_MS = 10_000;
+
+type TopListSongsCache = {
+  list: PlaylistSong[];
+  ts: number;
+};
+
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error('Timeout')), ms);
+    promise
+      .then((value) => {
+        clearTimeout(timer);
+        resolve(value);
+      })
+      .catch((error) => {
+        clearTimeout(timer);
+        reject(error);
+      });
+  });
+}
+
 export default function TopListPage({ params }: TopListPageProps) {
   const { platform, id } = use(params);
   const { setPlaylist } = usePlayer();
@@ -25,21 +49,51 @@ export default function TopListPage({ params }: TopListPageProps) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchSongs() {
+    let cancelled = false;
+    const cacheKey = `${TOPLIST_SONGS_CACHE_PREFIX}${platform}:${id}`;
+    const cached = storage.get<TopListSongsCache | null>(cacheKey, null);
+    if (cached?.list?.length) {
+      setSongs(cached.list);
+      setLoading(false);
+    } else {
+      setSongs([]);
       setLoading(true);
+    }
+
+    async function fetchSongs() {
       setError(null);
       try {
-        const data = await getTopListSongs(id, platform);
-        setSongs(data.list || []);
+        const data = await withTimeout(getTopListSongs(id, platform), TOPLIST_TIMEOUT_MS);
+        let list = data.list || [];
+        if (list.length === 0) {
+          const retry = await withTimeout(getTopListSongs(id, platform), TOPLIST_TIMEOUT_MS);
+          list = retry.list || [];
+        }
+
+        if (list.length === 0) {
+          throw new Error('Empty toplist songs');
+        }
+
+        if (cancelled) return;
+        setSongs(list);
+        storage.set(cacheKey, { list, ts: Date.now() });
       } catch (err) {
-        setError('加载歌曲列表失败');
         console.error(err);
+        if (cancelled) return;
+        if (!cached?.list?.length) {
+          setError('加载歌曲列表失败');
+        } else {
+          setError('网络波动，已显示缓存数据');
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
 
     fetchSongs();
+    return () => {
+      cancelled = true;
+    };
   }, [id, platform]);
 
   const handlePlayAll = () => {
@@ -89,25 +143,32 @@ export default function TopListPage({ params }: TopListPageProps) {
         </Button>
       </header>
 
-      {loading ? (
+      {loading && songs.length === 0 ? (
         <div className="flex items-center justify-center py-16 text-muted-foreground">
           <Loader2 size={32} className="animate-spin" />
         </div>
-      ) : error ? (
+      ) : null}
+
+      {error && songs.length === 0 ? (
         <div className="rounded-3xl border border-border bg-card/70 p-6 text-center text-sm text-muted-foreground">
           {error}
         </div>
-      ) : (
-        <SongList
-          songs={songs.map((song) => ({
-            id: song.id,
-            name: song.name,
-            artist: song.artist,
-            platform,
-          }))}
-          showAlbum={false}
-        />
-      )}
+      ) : null}
+
+      {songs.length > 0 ? (
+        <div className="space-y-3">
+          {error && <p className="text-xs text-muted-foreground">{error}</p>}
+          <SongList
+            songs={songs.map((song) => ({
+              id: song.id,
+              name: song.name,
+              artist: song.artist,
+              platform,
+            }))}
+            showAlbum={false}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getTopLists } from '@/lib/api';
 import type { MusicPlatform, TopListItem } from '@/lib/types';
+import { storage } from '@/lib/utils';
 import { Loader2, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -14,6 +15,29 @@ const PLATFORMS: { id: MusicPlatform; name: string }[] = [
   { id: 'qq', name: 'QQ音乐' },
   { id: 'kuwo', name: '酷我' },
 ];
+
+const TOPLIST_CACHE_PREFIX = 'toplists_cache:';
+const TOPLIST_TIMEOUT_MS = 10_000;
+
+type TopListCache = {
+  list: TopListItem[];
+  ts: number;
+};
+
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error('Timeout')), ms);
+    promise
+      .then((value) => {
+        clearTimeout(timer);
+        resolve(value);
+      })
+      .catch((error) => {
+        clearTimeout(timer);
+        reject(error);
+      });
+  });
+}
 
 export default function HomePage() {
   const [platform, setPlatform] = useState<MusicPlatform>('netease');
@@ -28,21 +52,51 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    async function fetchTopLists() {
+    let cancelled = false;
+    const cacheKey = `${TOPLIST_CACHE_PREFIX}${platform}`;
+    const cached = storage.get<TopListCache | null>(cacheKey, null);
+    if (cached?.list?.length) {
+      setTopLists(cached.list);
+      setLoading(false);
+    } else {
+      setTopLists([]);
       setLoading(true);
+    }
+
+    async function fetchTopLists() {
       setError(null);
       try {
-        const data = await getTopLists(platform);
-        setTopLists(data.list || []);
+        const data = await withTimeout(getTopLists(platform), TOPLIST_TIMEOUT_MS);
+        let list = data.list || [];
+        if (list.length === 0) {
+          const retry = await withTimeout(getTopLists(platform), TOPLIST_TIMEOUT_MS);
+          list = retry.list || [];
+        }
+
+        if (list.length === 0) {
+          throw new Error('Empty toplist');
+        }
+
+        if (cancelled) return;
+        setTopLists(list);
+        storage.set(cacheKey, { list, ts: Date.now() });
       } catch (err) {
-        setError('加载排行榜失败，请稍后重试');
         console.error(err);
+        if (cancelled) return;
+        if (!cached?.list?.length) {
+          setError('加载排行榜失败，请稍后重试');
+        } else {
+          setError('网络波动，已显示缓存数据');
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
 
     fetchTopLists();
+    return () => {
+      cancelled = true;
+    };
   }, [platform]);
 
   return (
@@ -88,31 +142,40 @@ export default function HomePage() {
           </Tabs>
         </div>
 
-        {loading ? (
+        {loading && topLists.length === 0 ? (
           <div className="flex items-center justify-center py-16 text-muted-foreground">
             <Loader2 size={32} className="animate-spin" />
           </div>
-        ) : error ? (
+        ) : null}
+
+        {error && topLists.length === 0 ? (
           <div className="rounded-2xl border border-border bg-card/70 p-6 text-center">
             <p className="text-sm text-muted-foreground">{error}</p>
             <Button variant="outline" className="mt-4" onClick={() => setPlatform(platform)}>
               重试
             </Button>
           </div>
-        ) : (
-          <MediaGrid>
-            {topLists.slice(0, 12).map((list) => (
-              <Link key={list.id} href={`/toplist/${platform}/${list.id}`}>
-                <MediaCard
-                  id={list.id}
-                  title={list.name}
-                  subtitle={list.updateFrequency}
-                  imageUrl={list.pic || ''}
-                />
-              </Link>
-            ))}
-          </MediaGrid>
-        )}
+        ) : null}
+
+        {topLists.length > 0 ? (
+          <div className="space-y-3">
+            {error && (
+              <p className="text-xs text-muted-foreground">{error}</p>
+            )}
+            <MediaGrid>
+              {topLists.slice(0, 12).map((list) => (
+                <Link key={list.id} href={`/toplist/${platform}/${list.id}`}>
+                  <MediaCard
+                    id={list.id}
+                    title={list.name}
+                    subtitle={list.updateFrequency}
+                    imageUrl={list.pic || ''}
+                  />
+                </Link>
+              ))}
+            </MediaGrid>
+          </div>
+        ) : null}
       </section>
     </div>
   );
