@@ -31,37 +31,38 @@ export function TopBar() {
   }, [pathname]);
 
   return (
-    <header className="flex flex-col gap-3 border-b border-border/60 bg-background/90 px-4 py-4 backdrop-blur-md md:flex-row md:items-center md:justify-between md:gap-4 md:px-8 md:py-5 md:backdrop-blur-xl">
-      <div>
-        <p className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground md:text-xs">
-          yyMusic
-        </p>
-        <h1 className="mt-2 truncate font-display text-xl font-semibold leading-tight text-foreground md:text-3xl">
-          {header.title}
-        </h1>
-        <p className="mt-1 truncate text-xs text-muted-foreground md:text-sm">
-          {header.subtitle}
-        </p>
-      </div>
+    <header className="sticky top-0 z-30 border-b border-border/60 bg-background/70 backdrop-blur-md">
+      <div className="flex flex-col gap-3 px-4 py-4 md:flex-row md:items-center md:justify-between md:gap-4 md:px-8 md:py-5">
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground md:text-xs">
+            yyMusic
+          </p>
+          <h1 className="mt-2 truncate font-display text-2xl font-semibold leading-tight text-foreground md:text-4xl">
+            {header.title}
+          </h1>
+          <p className="mt-1 truncate text-xs text-muted-foreground md:text-sm">
+            {header.subtitle}
+          </p>
+        </div>
 
-      <div className="flex w-full flex-col gap-3 md:w-auto md:flex-row md:items-center">
-        <div className="flex items-center gap-2">
+        <div className="flex w-full items-center gap-2 md:w-auto">
           {pathname !== '/search' && (
             <Button
               variant="outline"
-              size="icon"
-              className="md:hidden"
+              size="sm"
+              className="hidden md:flex"
               onClick={() => router.push('/search')}
               aria-label="搜索"
             >
-              <Search size={16} />
+              <Search size={14} className="mr-2" />
+              搜索音乐
             </Button>
           )}
           {pathname !== '/search' && (
             <Button
               variant="outline"
               size="icon"
-              className="hidden md:inline-flex transition hover:border-primary/70 hover:text-primary hover:shadow-glow"
+              className="md:hidden"
               onClick={() => router.push('/search')}
               aria-label="搜索"
             >

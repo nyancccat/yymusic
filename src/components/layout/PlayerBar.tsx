@@ -133,7 +133,7 @@ export function PlayerBar() {
 
   return (
     <div
-      className="fixed bottom-[calc(var(--mobile-nav-height)+env(safe-area-inset-bottom))] left-0 right-0 z-50 min-h-[var(--mobile-player-height)] border-t border-border/60 bg-card/95 backdrop-blur-md lg:bottom-0 lg:backdrop-blur-xl"
+      className="fixed bottom-[calc(var(--mobile-nav-height)+env(safe-area-inset-bottom))] left-3 right-3 z-50 min-h-[var(--mobile-player-height)] rounded-2xl border border-border/60 bg-card/95 shadow-lg backdrop-blur-md lg:bottom-4 lg:left-24 lg:right-6 lg:rounded-3xl lg:backdrop-blur-xl"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >

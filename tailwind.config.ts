@@ -43,7 +43,7 @@ const config: Config = {
         display: ['var(--font-display)', 'var(--font-sans)', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
-        glow: '0 0 24px rgba(255, 196, 0, 0.25)',
+        glow: '0 0 24px rgba(44, 190, 160, 0.28)',
       },
     },
   },

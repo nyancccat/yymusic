@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Noto_Sans_SC, Space_Grotesk } from 'next/font/google';
+import { Noto_Sans_SC, ZCOOL_XiaoWei } from 'next/font/google';
 import RootLayoutClient from './RootLayoutClient';
 
 const notoSans = Noto_Sans_SC({
@@ -8,10 +8,10 @@ const notoSans = Noto_Sans_SC({
   weight: ['400', '500', '600', '700'],
 });
 
-const spaceGrotesk = Space_Grotesk({
+const zcoolXiaowei = ZCOOL_XiaoWei({
   subsets: ['latin'],
   variable: '--font-display',
-  weight: ['400', '500', '600', '700'],
+  weight: ['400'],
 });
 
 export const metadata: Metadata = {
@@ -70,7 +70,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN" className={`${notoSans.variable} ${spaceGrotesk.variable}`}>
+    <html lang="zh-CN" className={`${notoSans.variable} ${zcoolXiaowei.variable}`}>
       <body className="min-h-screen bg-background text-foreground">
         <RootLayoutClient>{children}</RootLayoutClient>
       </body>
