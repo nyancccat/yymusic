@@ -68,7 +68,7 @@ export function SongList({
     currentTrack?.id === song.id && currentTrack?.platform === song.platform;
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       {showHeader && (
         <div
           className="grid items-center gap-2 text-xs uppercase tracking-[0.18em] text-muted-foreground md:gap-3 [grid-template-columns:var(--grid-cols-mobile)] md:[grid-template-columns:var(--grid-cols-desktop)]"

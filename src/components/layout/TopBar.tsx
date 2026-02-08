@@ -76,7 +76,7 @@ export function TopBar() {
   const HeaderIcon = header.icon;
 
   return (
-    <header className="sticky top-0 z-30 border-b border-border/70 bg-background/85 backdrop-blur-md">
+    <header className="z-40 border-b border-border/70 bg-background/95 backdrop-blur-md md:sticky md:top-0">
       <div className="flex items-center justify-between gap-3 px-3 py-3 md:gap-4 md:px-8 md:py-5">
         <div className="min-w-0">
           <p className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground md:text-xs">

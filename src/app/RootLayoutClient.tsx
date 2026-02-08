@@ -24,10 +24,10 @@ function AppContent({ children }: { children: React.ReactNode }) {
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar />
         <div className="flex min-h-0 flex-1">
-          <main className="relative flex-1 overflow-y-auto px-3 pb-[calc(var(--bottom-space)+env(safe-area-inset-bottom))] pt-3 md:px-8 md:pt-6">
+          <main className="relative flex-1 overflow-y-auto px-3 pb-[calc(var(--bottom-space)+env(safe-area-inset-bottom))] pt-4 md:px-8 md:pt-6">
             <div className="pointer-events-none absolute inset-x-0 top-0 h-24 border-b border-border/40 bg-gradient-to-b from-primary/10 via-transparent to-transparent" />
             <div className="pointer-events-none absolute inset-0 bg-grid opacity-20" />
-            <div className="relative">{children}</div>
+            <div className="relative pt-2 md:pt-0">{children}</div>
           </main>
           {showLyrics && <RightPanel />}
         </div>
