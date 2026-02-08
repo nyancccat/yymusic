@@ -23,10 +23,10 @@
   --input: 334 20% 84%;
   --ring: 336 82% 62%;
   --radius: 0.5rem;
-  --mobile-nav-height: 56px;
-  --mobile-player-height: 78px;
+  --mobile-nav-height: 60px;
+  --mobile-player-height: 82px;
   --desktop-player-height: 84px;
-  --bottom-space: calc(var(--mobile-nav-height) + var(--mobile-player-height) + 8px);
+  --bottom-space: calc(var(--mobile-nav-height) + var(--mobile-player-height) + 10px);
 }
 
 .dark {

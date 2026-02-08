@@ -81,7 +81,7 @@ export function TopBar() {
     <header className="z-40 border-b border-border/70 bg-background/95 backdrop-blur-md md:sticky md:top-0">
       <div
         className={cn(
-          'flex items-center justify-between gap-3 px-3 py-3 md:gap-4 md:px-8 md:py-5',
+          'flex items-center justify-between gap-3 px-3.5 py-2.5 md:gap-4 md:px-8 md:py-5',
           isAboutPage && 'py-2.5'
         )}
       >
@@ -115,7 +115,7 @@ export function TopBar() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 md:gap-2">
           {pathname !== '/search' && (
             <Button
               variant="outline"
@@ -123,6 +123,7 @@ export function TopBar() {
               onClick={() => router.push('/search')}
               aria-label="搜索"
               title="搜索"
+              className="h-9 w-9 md:h-10 md:w-10"
             >
               <Search size={16} />
             </Button>
@@ -137,7 +138,9 @@ export function TopBar() {
           >
             {showLyrics ? <PanelRightClose size={16} /> : <PanelRightOpen size={16} />}
           </Button>
-          <ThemeToggle />
+          <div className="scale-95 md:scale-100">
+            <ThemeToggle />
+          </div>
         </div>
       </div>
     </header>

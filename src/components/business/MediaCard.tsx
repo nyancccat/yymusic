@@ -24,7 +24,7 @@ export function MediaCard({ title, subtitle, imageUrl, onPlay }: MediaCardProps)
           <img
             src={imageUrl}
             alt={title}
-            className="h-36 w-full object-cover transition group-hover:scale-105 md:h-40"
+            className="h-32 w-full object-cover transition group-hover:scale-105 md:h-40"
             loading="lazy"
             decoding="async"
           />
@@ -64,5 +64,9 @@ interface MediaGridProps {
 }
 
 export function MediaGrid({ children }: MediaGridProps) {
-  return <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{children}</div>;
+  return (
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
+      {children}
+    </div>
+  );
 }

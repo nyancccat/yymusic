@@ -116,12 +116,12 @@ export default function HomePage() {
               三个平台的热门榜单在这里相逢。你只管点开，故事会自己流动。
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <Button variant="accent" onClick={handleExplore}>
+          <div className="flex w-full items-center gap-2 sm:w-auto sm:gap-3">
+            <Button variant="accent" className="flex-1 sm:flex-none" onClick={handleExplore}>
               <Waves size={16} className="mr-2" />
               开始聆听
             </Button>
-            <Button variant="outline" asChild>
+            <Button variant="outline" className="flex-1 sm:flex-none" asChild>
               <Link href="/search">
                 <Compass size={15} className="mr-2" />
                 去找一首歌

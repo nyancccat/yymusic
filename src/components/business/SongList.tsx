@@ -35,7 +35,7 @@ export function SongList({
   const { currentTrack, isPlaying, setPlaylist } = usePlayer();
   const { isFavorite, toggleFavorite } = useFavorites();
 
-  const mobileColumns = ['32px', 'minmax(0,1fr)', '56px'].join(' ');
+  const mobileColumns = ['32px', 'minmax(0,1fr)', '48px'].join(' ');
   const desktopColumns = [
     '32px',
     'minmax(0,1fr)',
@@ -71,7 +71,7 @@ export function SongList({
     <div className="space-y-3">
       {showHeader && (
         <div
-          className="grid items-center gap-2 pb-2 text-xs uppercase tracking-[0.18em] text-muted-foreground md:gap-3 [grid-template-columns:var(--grid-cols-mobile)] md:[grid-template-columns:var(--grid-cols-desktop)]"
+          className="hidden items-center gap-2 pb-2 text-xs uppercase tracking-[0.18em] text-muted-foreground md:grid md:gap-3 [grid-template-columns:var(--grid-cols-mobile)] md:[grid-template-columns:var(--grid-cols-desktop)]"
           style={gridStyle}
         >
           <span>#</span>
@@ -87,7 +87,7 @@ export function SongList({
           <div
             key={`${song.platform}-${song.id}`}
             className={cn(
-              'group grid items-center gap-2 rounded-lg border border-transparent px-2 py-2.5 transition hover:bg-secondary/40 hover:shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.45)] md:gap-3 md:py-2 [grid-template-columns:var(--grid-cols-mobile)] md:[grid-template-columns:var(--grid-cols-desktop)]',
+              'group grid items-center gap-2 rounded-lg border border-transparent px-2 py-2 transition hover:bg-secondary/40 hover:shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.45)] md:gap-3 md:py-2 [grid-template-columns:var(--grid-cols-mobile)] md:[grid-template-columns:var(--grid-cols-desktop)]',
               isCurrentSong(song) &&
                 'bg-primary/10 shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.45)]'
             )}

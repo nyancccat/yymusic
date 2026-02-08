@@ -133,7 +133,7 @@ export function PlayerBar() {
 
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 z-50 min-h-[var(--mobile-player-height)] border-t border-border/70 bg-card/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-10px_24px_rgba(15,23,42,0.08)] lg:min-h-[var(--desktop-player-height)] lg:pb-0"
+      className="fixed bottom-0 left-0 right-0 z-50 min-h-[var(--mobile-player-height)] border-t border-border/70 bg-card/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-10px_24px_rgba(15,23,42,0.08)] backdrop-blur-sm lg:min-h-[var(--desktop-player-height)] lg:pb-0"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
@@ -142,15 +142,15 @@ export function PlayerBar() {
           <div className="h-full bg-primary" style={{ width: `${progress}%` }} />
         </div>
       </div>
-      <div className="px-3 py-1.5 md:px-6 md:py-3">
-        <div className="flex items-center gap-2 md:hidden">
+      <div className="px-2.5 py-1.5 md:px-6 md:py-3">
+        <div className="flex items-center gap-1.5 md:hidden">
           <button
             type="button"
-            className="flex min-w-0 flex-1 items-center gap-3 rounded-md px-2 py-2 text-left transition hover:bg-secondary/50"
+            className="flex min-w-0 flex-1 items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition hover:bg-secondary/50 active:bg-secondary/60"
             onClick={toggleFullScreen}
             title="进入全屏模式"
           >
-            <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-md bg-secondary">
+            <div className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-md bg-secondary">
               {currentTrack?.cover ? (
                 <img
                   src={currentTrack.cover}
@@ -162,7 +162,7 @@ export function PlayerBar() {
               )}
             </div>
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium">
+              <p className="truncate text-[13px] font-medium">
                 {currentTrack ? currentTrack.name : '选择一首歌开始播放'}
               </p>
               <p className="truncate text-xs text-muted-foreground">
@@ -171,7 +171,13 @@ export function PlayerBar() {
             </div>
           </button>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" onClick={prev} disabled={!currentTrack}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 max-[360px]:hidden md:h-10 md:w-10"
+              onClick={prev}
+              disabled={!currentTrack}
+            >
               <SkipBack size={18} />
             </Button>
             <Button
@@ -190,7 +196,13 @@ export function PlayerBar() {
                 <Play size={18} fill="currentColor" strokeWidth={0} className="ml-0.5" />
               )}
             </Button>
-            <Button variant="ghost" size="icon" onClick={next} disabled={!currentTrack}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 max-[360px]:hidden md:h-10 md:w-10"
+              onClick={next}
+              disabled={!currentTrack}
+            >
               <SkipForward size={18} />
             </Button>
           </div>
@@ -215,7 +227,7 @@ export function PlayerBar() {
               )}
             </div>
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium">
+              <p className="truncate text-[13px] font-medium">
                 {currentTrack ? currentTrack.name : '选择一首歌开始播放'}
               </p>
               <p className="truncate text-xs text-muted-foreground">
@@ -226,7 +238,13 @@ export function PlayerBar() {
 
           <div className="flex flex-1 flex-col gap-2 items-center">
             <div className="flex items-center justify-center gap-3">
-              <Button variant="ghost" size="icon" onClick={prev} disabled={!currentTrack}>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 max-[360px]:hidden md:h-10 md:w-10"
+                onClick={prev}
+                disabled={!currentTrack}
+              >
                 <SkipBack size={18} />
               </Button>
               <Button
@@ -245,7 +263,13 @@ export function PlayerBar() {
                   <Play size={18} fill="currentColor" strokeWidth={0} className="ml-0.5" />
                 )}
               </Button>
-              <Button variant="ghost" size="icon" onClick={next} disabled={!currentTrack}>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 max-[360px]:hidden md:h-10 md:w-10"
+                onClick={next}
+                disabled={!currentTrack}
+              >
                 <SkipForward size={18} />
               </Button>
             </div>

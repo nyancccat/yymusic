@@ -34,12 +34,12 @@ export default function QueuePage() {
           <ListMusic size={15} className="text-primary" />
           队列里有 {playlist.length} 首歌
         </p>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={handleShuffle}>
+        <div className="grid w-full grid-cols-2 gap-2 md:flex md:w-auto md:items-center">
+          <Button variant="outline" className="w-full md:w-auto" onClick={handleShuffle}>
             <Shuffle size={16} className="mr-2" />
             洗牌
           </Button>
-          <Button variant="accent" onClick={handlePlayAll}>
+          <Button variant="accent" className="w-full md:w-auto" onClick={handlePlayAll}>
             <Play size={16} className="mr-2" />
             {isPlaying ? '暂停' : '播放'}
           </Button>
