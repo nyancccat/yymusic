@@ -94,7 +94,9 @@ export function SongList({
         >
           <div className="flex items-center justify-center text-xs text-muted-foreground">
             {isCurrentSong(song) && isPlaying ? (
-              <Volume2 size={14} className="text-primary" />
+              <span className="flex h-8 w-8 items-center justify-center rounded-md border border-primary/30 bg-primary/10 text-primary">
+                <Volume2 size={14} />
+              </span>
             ) : (
               <button
                 type="button"
