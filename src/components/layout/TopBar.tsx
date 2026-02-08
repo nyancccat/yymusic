@@ -84,7 +84,7 @@ export function TopBar() {
           </p>
           <div className="mt-2 flex items-center gap-2">
             <HeaderIcon size={18} className="shrink-0 text-primary" />
-            <h1 className="truncate font-display text-xl font-semibold leading-tight md:text-3xl">
+            <h1 className="truncate font-display text-xl font-semibold leading-[1.2] md:text-3xl">
               {header.title}
             </h1>
           </div>

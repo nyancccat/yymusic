@@ -71,7 +71,7 @@ export function SongList({
     <div className="space-y-3">
       {showHeader && (
         <div
-          className="grid items-center gap-2 text-xs uppercase tracking-[0.18em] text-muted-foreground md:gap-3 [grid-template-columns:var(--grid-cols-mobile)] md:[grid-template-columns:var(--grid-cols-desktop)]"
+          className="grid items-center gap-2 pb-1 text-xs uppercase tracking-[0.18em] text-muted-foreground md:gap-3 [grid-template-columns:var(--grid-cols-mobile)] md:[grid-template-columns:var(--grid-cols-desktop)]"
           style={gridStyle}
         >
           <span>#</span>

@@ -18,7 +18,7 @@ export default function RecentPage() {
   }));
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pt-1 md:pt-0">
       {recentSongs.length === 0 ? (
         <div className="flex flex-col items-center gap-3 rounded-xl border border-border bg-card/90 p-6 text-center text-muted-foreground md:p-10">
           <Clock3 size={40} />
