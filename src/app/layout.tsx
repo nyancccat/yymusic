@@ -1,18 +1,5 @@
 import type { Metadata } from 'next';
-import { Noto_Sans_SC, ZCOOL_XiaoWei } from 'next/font/google';
 import RootLayoutClient from './RootLayoutClient';
-
-const notoSans = Noto_Sans_SC({
-  subsets: ['latin'],
-  variable: '--font-sans',
-  weight: ['400', '500', '600', '700'],
-});
-
-const zcoolXiaowei = ZCOOL_XiaoWei({
-  subsets: ['latin'],
-  variable: '--font-display',
-  weight: ['400'],
-});
 
 export const metadata: Metadata = {
   title: {
@@ -58,9 +45,9 @@ export const metadata: Metadata = {
     images: ['https://music.byebug.cn/logo.svg'],
   },
   icons: {
-    icon: '/logo.svg',
-    shortcut: '/logo.svg',
-    apple: '/logo.svg',
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
   },
 };
 
@@ -70,7 +57,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN" className={`${notoSans.variable} ${zcoolXiaowei.variable}`}>
+    <html lang="zh-CN">
       <body className="min-h-screen bg-background text-foreground">
         <RootLayoutClient>{children}</RootLayoutClient>
       </body>

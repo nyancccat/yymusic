@@ -6,7 +6,7 @@ import { usePlayer } from '@/context/PlayerContext';
 import { getTopListSongs } from '@/lib/api';
 import type { MusicPlatform, PlaylistSong, Track } from '@/lib/types';
 import { storage } from '@/lib/utils';
-import { ChevronLeft, Loader2, Music2, Play } from 'lucide-react';
+import { ChevronLeft, Disc3, Loader2, Music2, Play, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { use, useEffect, useState } from 'react';
 
@@ -81,9 +81,9 @@ export default function TopListPage({ params }: TopListPageProps) {
         console.error(err);
         if (cancelled) return;
         if (!cached?.list?.length) {
-          setError('加载歌曲列表失败');
+          setError('榜单暂时失联，请稍后再来。');
         } else {
-          setError('网络波动，已显示缓存数据');
+          setError('网络摇晃，先展示缓存内容。');
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -122,24 +122,27 @@ export default function TopListPage({ params }: TopListPageProps) {
         className="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground"
       >
         <ChevronLeft size={16} />
-        返回
+        返回首页
       </Link>
 
-      <header className="flex flex-col gap-4 rounded-3xl border border-border bg-card/70 p-6 md:flex-row md:items-center md:justify-between">
+      <header className="flex flex-col gap-4 rounded-xl border border-border bg-card/90 p-5 md:flex-row md:items-center md:justify-between md:p-6">
         <div className="flex items-center gap-4">
-          <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-secondary text-muted-foreground">
+          <div className="flex h-20 w-20 items-center justify-center rounded-md bg-secondary text-muted-foreground">
             <Music2 size={32} />
           </div>
           <div>
-            <h1 className="text-2xl font-semibold">{platformNames[platform]}热榜</h1>
+            <h1 className="flex items-center gap-2 text-2xl font-semibold">
+              <Sparkles size={18} className="text-primary" />
+              {platformNames[platform]} 热榜
+            </h1>
             <p className="text-sm text-muted-foreground">
-              {platformNames[platform]} • {songs.length} 首歌曲
+              {platformNames[platform]} · {songs.length} 首歌
             </p>
           </div>
         </div>
         <Button variant="accent" onClick={handlePlayAll} disabled={songs.length === 0}>
           <Play size={16} className="mr-2" />
-          播放全部
+          从第一首开始
         </Button>
       </header>
 
@@ -150,7 +153,7 @@ export default function TopListPage({ params }: TopListPageProps) {
       ) : null}
 
       {error && songs.length === 0 ? (
-        <div className="rounded-3xl border border-border bg-card/70 p-6 text-center text-sm text-muted-foreground">
+        <div className="rounded-xl border border-border bg-card/90 p-6 text-center text-sm text-muted-foreground">
           {error}
         </div>
       ) : null}
@@ -158,6 +161,10 @@ export default function TopListPage({ params }: TopListPageProps) {
       {songs.length > 0 ? (
         <div className="space-y-3">
           {error && <p className="text-xs text-muted-foreground">{error}</p>}
+          <p className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Disc3 size={13} className="text-primary" />
+            双击任意一行可立即播放
+          </p>
           <SongList
             songs={songs.map((song) => ({
               id: song.id,

@@ -3,19 +3,51 @@
 import { ThemeToggle } from '@/components/common/ThemeToggle';
 import { Button } from '@/components/ui/button';
 import { useLyrics } from '@/context/LyricsContext';
-import { cn } from '@/lib/utils';
-import { PanelRightClose, PanelRightOpen, Search } from 'lucide-react';
-import Link from 'next/link';
+import {
+  Compass,
+  Disc3,
+  Heart,
+  LibraryBig,
+  type LucideIcon,
+  PanelRightClose,
+  PanelRightOpen,
+  Search,
+  Sparkles,
+} from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 
-const TITLE_MAP: Record<string, { title: string; subtitle: string }> = {
-  '/': { title: '现在就听', subtitle: '热门排行榜与精选歌单' },
-  '/search': { title: '搜索', subtitle: '全网音乐一键直达' },
-  '/favorites': { title: '我喜欢', subtitle: '收藏的声音都在这里' },
-  '/queue': { title: '播放列表', subtitle: '即将播放的内容' },
-  '/recent': { title: '最近播放', subtitle: '回到刚刚听的旋律' },
-  '/about': { title: '关于', subtitle: 'yyMusic · 余韵音乐' },
+const TITLE_MAP: Record<string, { title: string; subtitle: string; icon: LucideIcon }> = {
+  '/': {
+    title: '夜色留声',
+    subtitle: '把今天的心事，交给旋律慢慢说。',
+    icon: Sparkles,
+  },
+  '/search': {
+    title: '拾音漫游',
+    subtitle: '输入一段名字，遇见久别重逢的那首歌。',
+    icon: Compass,
+  },
+  '/favorites': {
+    title: '心动收藏',
+    subtitle: '你按下喜欢的每一次，都是情绪的注脚。',
+    icon: Heart,
+  },
+  '/queue': {
+    title: '下一程旋律',
+    subtitle: '让播放顺序像夜晚散步一样从容。',
+    icon: Disc3,
+  },
+  '/recent': {
+    title: '回声轨迹',
+    subtitle: '那些刚听过的片刻，仍在耳边回响。',
+    icon: LibraryBig,
+  },
+  '/about': {
+    title: '关于余韵',
+    subtitle: '一座温柔的在线唱片馆。',
+    icon: Sparkles,
+  },
 };
 
 export function TopBar() {
@@ -25,46 +57,50 @@ export function TopBar() {
 
   const header = useMemo(() => {
     if (pathname.startsWith('/toplist')) {
-      return { title: '排行榜', subtitle: '榜单详情与热歌' };
+      return {
+        title: '榜单诗页',
+        subtitle: '把城市热歌，翻成一行一行。',
+        icon: Disc3,
+      };
     }
-    return TITLE_MAP[pathname] || { title: '探索', subtitle: '发现新的旋律' };
+
+    return (
+      TITLE_MAP[pathname] || {
+        title: '旋律漫游',
+        subtitle: '愿你在每一次点击里，听见自己。',
+        icon: Sparkles,
+      }
+    );
   }, [pathname]);
 
+  const HeaderIcon = header.icon;
+
   return (
-    <header className="sticky top-0 z-30 border-b border-border/60 bg-background/70 backdrop-blur-md">
-      <div className="flex flex-col gap-3 px-4 py-4 md:flex-row md:items-center md:justify-between md:gap-4 md:px-8 md:py-5">
-        <div>
+    <header className="sticky top-0 z-30 border-b border-border/70 bg-background/85 backdrop-blur-md">
+      <div className="flex items-center justify-between gap-3 px-3 py-3 md:gap-4 md:px-8 md:py-5">
+        <div className="min-w-0">
           <p className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground md:text-xs">
             yyMusic
           </p>
-          <h1 className="mt-2 truncate font-display text-2xl font-semibold leading-tight text-foreground md:text-4xl">
-            {header.title}
-          </h1>
-          <p className="mt-1 truncate text-xs text-muted-foreground md:text-sm">
+          <div className="mt-2 flex items-center gap-2">
+            <HeaderIcon size={18} className="shrink-0 text-primary" />
+            <h1 className="truncate font-display text-xl font-semibold leading-tight md:text-3xl">
+              {header.title}
+            </h1>
+          </div>
+          <p className="mt-1 truncate text-[11px] text-muted-foreground md:text-sm">
             {header.subtitle}
           </p>
         </div>
 
-        <div className="flex w-full items-center gap-2 md:w-auto">
-          {pathname !== '/search' && (
-            <Button
-              variant="outline"
-              size="sm"
-              className="hidden md:flex"
-              onClick={() => router.push('/search')}
-              aria-label="搜索"
-            >
-              <Search size={14} className="mr-2" />
-              搜索音乐
-            </Button>
-          )}
+        <div className="flex items-center gap-2">
           {pathname !== '/search' && (
             <Button
               variant="outline"
               size="icon"
-              className="md:hidden"
               onClick={() => router.push('/search')}
               aria-label="搜索"
+              title="搜索"
             >
               <Search size={16} />
             </Button>
@@ -75,6 +111,7 @@ export function TopBar() {
             className="hidden md:inline-flex"
             onClick={toggleLyrics}
             aria-label="切换歌词面板"
+            title="切换歌词面板"
           >
             {showLyrics ? <PanelRightClose size={16} /> : <PanelRightOpen size={16} />}
           </Button>

@@ -3,7 +3,7 @@
 import { SongList } from '@/components/business';
 import { Button } from '@/components/ui/button';
 import { useFavorites } from '@/context/FavoritesContext';
-import { Heart } from 'lucide-react';
+import { Heart, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
 export default function FavoritesPage() {
@@ -21,17 +21,20 @@ export default function FavoritesPage() {
   return (
     <div className="space-y-6">
       {favorites.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 rounded-3xl border border-border bg-card/70 p-10 text-center text-muted-foreground">
+        <div className="flex flex-col items-center gap-3 rounded-xl border border-border bg-card/90 p-6 text-center text-muted-foreground md:p-10">
           <Heart size={40} />
-          <p className="text-sm">暂无收藏</p>
-          <p className="text-xs">点击歌曲旁边的 ♡ 按钮将歌曲添加到收藏</p>
+          <p className="text-sm">你的收藏夹还空着</p>
+          <p className="text-xs">遇见心动旋律时，点一下爱心就好。</p>
           <Button variant="outline" asChild>
-            <Link href="/search">去搜索歌曲</Link>
+            <Link href="/search">去找一首歌</Link>
           </Button>
         </div>
       ) : (
         <div className="space-y-4">
-          <p className="text-xs text-muted-foreground">{favorites.length} 首收藏歌曲</p>
+          <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Sparkles size={14} className="text-primary" />
+            共收藏 {favorites.length} 首喜欢的歌
+          </p>
           <SongList songs={songs} showAlbum />
         </div>
       )}

@@ -3,51 +3,52 @@
 @tailwind utilities;
 
 :root {
-  --background: 200 28% 97%;
-  --foreground: 210 28% 12%;
+  --background: 336 36% 98%;
+  --foreground: 334 24% 14%;
   --card: 0 0% 100%;
-  --card-foreground: 210 28% 12%;
+  --card-foreground: 334 24% 14%;
   --popover: 0 0% 100%;
-  --popover-foreground: 210 28% 12%;
-  --primary: 170 60% 36%;
+  --popover-foreground: 334 24% 14%;
+  --primary: 336 82% 62%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 200 25% 90%;
-  --secondary-foreground: 210 28% 12%;
-  --muted: 200 18% 92%;
-  --muted-foreground: 210 16% 35%;
-  --accent: 20 90% 58%;
+  --secondary: 335 28% 93%;
+  --secondary-foreground: 334 26% 18%;
+  --muted: 334 20% 91%;
+  --muted-foreground: 334 12% 40%;
+  --accent: 350 94% 70%;
   --accent-foreground: 0 0% 100%;
   --destructive: 0 72% 54%;
   --destructive-foreground: 0 0% 98%;
-  --border: 200 18% 84%;
-  --input: 200 18% 84%;
-  --ring: 170 60% 36%;
-  --radius: 0.9rem;
-  --mobile-nav-height: 64px;
-  --mobile-player-height: 72px;
-  --bottom-space: calc(var(--mobile-nav-height) + var(--mobile-player-height));
+  --border: 334 20% 84%;
+  --input: 334 20% 84%;
+  --ring: 336 82% 62%;
+  --radius: 0.5rem;
+  --mobile-nav-height: 56px;
+  --mobile-player-height: 78px;
+  --desktop-player-height: 84px;
+  --bottom-space: calc(var(--mobile-nav-height) + var(--mobile-player-height) + 8px);
 }
 
 .dark {
-  --background: 210 28% 8%;
-  --foreground: 200 20% 94%;
-  --card: 210 28% 12%;
-  --card-foreground: 200 20% 94%;
-  --popover: 210 28% 12%;
-  --popover-foreground: 200 20% 94%;
-  --primary: 170 60% 45%;
-  --primary-foreground: 210 28% 10%;
-  --secondary: 210 22% 18%;
-  --secondary-foreground: 200 20% 94%;
-  --muted: 210 18% 20%;
-  --muted-foreground: 200 14% 65%;
-  --accent: 20 80% 55%;
-  --accent-foreground: 210 28% 10%;
+  --background: 330 26% 9%;
+  --foreground: 332 16% 93%;
+  --card: 330 24% 12%;
+  --card-foreground: 332 16% 93%;
+  --popover: 330 24% 12%;
+  --popover-foreground: 332 16% 93%;
+  --primary: 337 86% 68%;
+  --primary-foreground: 330 26% 10%;
+  --secondary: 332 16% 18%;
+  --secondary-foreground: 332 14% 90%;
+  --muted: 332 12% 21%;
+  --muted-foreground: 332 10% 66%;
+  --accent: 350 85% 64%;
+  --accent-foreground: 330 26% 10%;
   --destructive: 0 62% 42%;
   --destructive-foreground: 0 0% 98%;
-  --border: 210 16% 26%;
-  --input: 210 16% 26%;
-  --ring: 170 60% 45%;
+  --border: 332 10% 28%;
+  --input: 332 10% 28%;
+  --ring: 337 86% 68%;
 }
 
 @layer base {
@@ -63,10 +64,10 @@
     @apply bg-background text-foreground font-sans overflow-hidden;
     min-height: 100vh;
     min-height: 100dvh;
-    background-image:
-      radial-gradient(circle at 15% 20%, hsl(var(--primary) / 0.08), transparent 40%),
-      radial-gradient(circle at 85% 0%, hsl(var(--accent) / 0.12), transparent 45%);
-    background-attachment: fixed;
+    background-image: radial-gradient(circle at 8% 12%, hsl(var(--primary) / 0.13), transparent 35%),
+      radial-gradient(circle at 96% 6%, hsl(var(--accent) / 0.12), transparent 38%),
+      linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background) / 0.96) 100%);
+    letter-spacing: 0.01em;
   }
 
   a {
@@ -76,34 +77,24 @@
 
 @media (min-width: 1024px) {
   :root {
-    --bottom-space: 88px;
+    --bottom-space: var(--desktop-player-height);
   }
 }
 
 @layer utilities {
   .glass-panel {
-    @apply bg-card/80 backdrop-blur-xl border border-border/60;
+    @apply bg-card/90 border border-border/70;
   }
 
-.text-glow {
-  text-shadow: 0 0 18px rgba(44, 190, 160, 0.35);
-}
+  .text-glow {
+    text-shadow: 0 0 16px rgba(255, 103, 161, 0.35);
+  }
 
-.bg-grid {
-  background-image: radial-gradient(circle at 1px 1px, rgba(44, 190, 160, 0.18) 1px, transparent 0);
-  background-size: 28px 28px;
-}
-
-@media (max-width: 640px) {
   .bg-grid {
-    background-image: radial-gradient(
-      circle at 1px 1px,
-      rgba(44, 190, 160, 0.12) 1px,
-      transparent 0
-    );
-    background-size: 36px 36px;
+    background-image: linear-gradient(to right, rgba(125, 99, 117, 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(125, 99, 117, 0.08) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
-}
 }
 
 @keyframes fade-in {

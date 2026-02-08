@@ -8,6 +8,7 @@ import type { AudioQuality } from '@/lib/types';
 import { formatTime } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 import {
+  Check,
   ChevronDown,
   Download,
   ListOrdered,
@@ -22,7 +23,6 @@ import {
   SkipForward,
   Volume2,
   VolumeX,
-  ChevronUp,
 } from 'lucide-react';
 import { useCallback, useRef, useState } from 'react';
 
@@ -133,28 +133,24 @@ export function PlayerBar() {
 
   return (
     <div
-      className="fixed bottom-[calc(var(--mobile-nav-height)+env(safe-area-inset-bottom))] left-3 right-3 z-50 min-h-[var(--mobile-player-height)] rounded-2xl border border-border/60 bg-card/95 shadow-lg backdrop-blur-md lg:bottom-4 lg:left-24 lg:right-6 lg:rounded-3xl lg:backdrop-blur-xl"
+      className="fixed bottom-0 left-0 right-0 z-50 min-h-[var(--mobile-player-height)] border-t border-border/70 bg-card/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-10px_24px_rgba(15,23,42,0.08)] lg:min-h-[var(--desktop-player-height)] lg:pb-0"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
       <div className="md:hidden">
-        <div className="h-1 w-full bg-secondary">
+        <div className="h-0.5 w-full bg-secondary">
           <div className="h-full bg-primary" style={{ width: `${progress}%` }} />
         </div>
       </div>
-      <div className="px-4 py-2 md:px-8 md:py-3">
-        <div className="flex items-center gap-3 md:hidden">
+      <div className="px-3 py-1.5 md:px-6 md:py-3">
+        <div className="flex items-center gap-2 md:hidden">
           <button
             type="button"
-            className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-border/60 bg-background/60 px-2 py-2 text-left transition hover:border-primary/60"
+            className="flex min-w-0 flex-1 items-center gap-3 rounded-md px-2 py-2 text-left transition hover:bg-secondary/50"
             onClick={toggleFullScreen}
             title="进入全屏模式"
           >
-            <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-secondary">
-              <span className="pointer-events-none absolute -inset-1 rounded-2xl border border-primary/30 opacity-70 animate-pulse md:hidden" />
-              <span className="pointer-events-none absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-glow md:hidden">
-                <ChevronUp size={10} />
-              </span>
+            <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-md bg-secondary">
               {currentTrack?.cover ? (
                 <img
                   src={currentTrack.cover}
@@ -203,11 +199,11 @@ export function PlayerBar() {
         <div className="hidden md:flex md:items-center md:gap-6">
           <button
             type="button"
-            className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/60 bg-background/60 px-3 py-2 text-left transition hover:border-primary/60"
+            className="flex min-w-0 items-center gap-3 rounded-md px-2 py-2 text-left transition hover:bg-secondary/50"
             onClick={toggleFullScreen}
             title="进入全屏模式"
           >
-            <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl bg-secondary">
+            <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-md bg-secondary">
               {currentTrack?.cover ? (
                 <img
                   src={currentTrack.cover}
@@ -258,7 +254,7 @@ export function PlayerBar() {
               <span>{formatTime(currentTime)}</span>
               <div
                 ref={progressRef}
-                className="relative h-1.5 w-full max-w-xl cursor-pointer overflow-hidden rounded-full bg-secondary"
+                className="relative h-1.5 w-full max-w-xl cursor-pointer overflow-hidden rounded-sm bg-secondary"
                 onClick={handleProgressClick}
                 onKeyDown={(event) => {
                   if (!duration) return;
@@ -282,99 +278,100 @@ export function PlayerBar() {
                 aria-valuemax={duration || 0}
                 aria-valuenow={currentTime}
               >
-                <div className="h-full rounded-full bg-primary" style={{ width: `${progress}%` }} />
+                <div className="h-full rounded-sm bg-primary" style={{ width: `${progress}%` }} />
               </div>
               <span>{formatTime(duration)}</span>
             </div>
           </div>
 
           <div className="flex items-center justify-between gap-3 md:justify-end">
-          <Button
-            variant={playMode !== 'sequential' ? 'accent' : 'outline'}
-            size="icon"
-            onClick={cyclePlayMode}
-            aria-label="切换播放模式"
-            title={
-              {
-                sequential: '顺序播放',
-                loop: '列表循环',
-                loopOne: '单曲循环',
-                shuffle: '随机播放',
-              }[playMode]
-            }
-          >
-            {playMode === 'shuffle' && <Shuffle size={16} />}
-            {playMode === 'loopOne' && <Repeat1 size={16} />}
-            {playMode === 'loop' && <Repeat size={16} />}
-            {playMode === 'sequential' && <ListOrdered size={16} />}
-          </Button>
-
-          <div className="hidden items-center gap-2 md:flex">
-            <Button variant="ghost" size="icon" onClick={toggleMute}>
-              {volume === 0 ? <VolumeX size={16} /> : <Volume2 size={16} />}
-            </Button>
-            <div
-              ref={volumeRef}
-              className="relative h-1.5 w-24 cursor-pointer overflow-hidden rounded-full bg-secondary"
-              onClick={handleVolumeClick}
-              onKeyDown={(event) => {
-                if (event.key === 'ArrowRight' || event.key === 'ArrowUp') {
-                  setVolume(Math.min(1, volume + 0.05));
-                }
-                if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') {
-                  setVolume(Math.max(0, volume - 0.05));
-                }
-                if (event.key === 'Home') {
-                  setVolume(0);
-                }
-                if (event.key === 'End') {
-                  setVolume(1);
-                }
-              }}
-              role="slider"
-              tabIndex={0}
-              aria-label="音量"
-              aria-valuemin={0}
-              aria-valuemax={1}
-              aria-valuenow={volume}
-            >
-              <div
-                className="h-full rounded-full bg-primary"
-                style={{ width: `${volume * 100}%` }}
-              />
-            </div>
-          </div>
-
-          <div className="relative">
             <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowQualityMenu(!showQualityMenu)}
+              variant={playMode !== 'sequential' ? 'accent' : 'outline'}
+              size="icon"
+              onClick={cyclePlayMode}
+              aria-label="切换播放模式"
+              title={
+                {
+                  sequential: '顺序播放',
+                  loop: '列表循环',
+                  loopOne: '单曲循环',
+                  shuffle: '随机播放',
+                }[playMode]
+              }
             >
-              <span className="text-xs">{audioQuality}</span>
-              <ChevronDown size={14} className="ml-1" />
+              {playMode === 'shuffle' && <Shuffle size={16} />}
+              {playMode === 'loopOne' && <Repeat1 size={16} />}
+              {playMode === 'loop' && <Repeat size={16} />}
+              {playMode === 'sequential' && <ListOrdered size={16} />}
             </Button>
-            {showQualityMenu && (
-              <div className="absolute right-0 z-50 mt-2 w-36 rounded-lg border border-border bg-card p-1 shadow-lg">
-                {QUALITY_OPTIONS.map((opt) => (
-                  <button
-                    type="button"
-                    key={opt.value}
-                    className={cn(
-                      'flex w-full items-center rounded-md px-2 py-1 text-xs transition hover:bg-secondary',
-                      audioQuality === opt.value && 'bg-primary text-primary-foreground'
-                    )}
-                    onClick={() => handleQualityChange(opt.value)}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
 
-          <Button variant="ghost" size="icon" onClick={handleDownload} disabled={!currentTrack}>
-            <Download size={16} />
+            <div className="hidden items-center gap-2 md:flex">
+              <Button variant="ghost" size="icon" onClick={toggleMute}>
+                {volume === 0 ? <VolumeX size={16} /> : <Volume2 size={16} />}
+              </Button>
+              <div
+                ref={volumeRef}
+                className="relative h-1.5 w-24 cursor-pointer overflow-hidden rounded-sm bg-secondary"
+                onClick={handleVolumeClick}
+                onKeyDown={(event) => {
+                  if (event.key === 'ArrowRight' || event.key === 'ArrowUp') {
+                    setVolume(Math.min(1, volume + 0.05));
+                  }
+                  if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') {
+                    setVolume(Math.max(0, volume - 0.05));
+                  }
+                  if (event.key === 'Home') {
+                    setVolume(0);
+                  }
+                  if (event.key === 'End') {
+                    setVolume(1);
+                  }
+                }}
+                role="slider"
+                tabIndex={0}
+                aria-label="音量"
+                aria-valuemin={0}
+                aria-valuemax={1}
+                aria-valuenow={volume}
+              >
+                <div
+                  className="h-full rounded-sm bg-primary"
+                  style={{ width: `${volume * 100}%` }}
+                />
+              </div>
+            </div>
+
+            <div className="relative">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowQualityMenu(!showQualityMenu)}
+              >
+                <span className="text-xs">{audioQuality}</span>
+                <ChevronDown size={14} className="ml-1" />
+              </Button>
+              {showQualityMenu && (
+                <div className="absolute bottom-full right-0 z-[130] mb-2 w-40 rounded-md border border-border bg-card p-1 shadow-lg">
+                  {QUALITY_OPTIONS.map((opt) => (
+                    <button
+                      type="button"
+                      key={opt.value}
+                      className={cn(
+                        'flex w-full items-center justify-between rounded-sm px-2 py-1.5 text-xs transition hover:bg-secondary',
+                        audioQuality === opt.value && 'bg-primary text-primary-foreground'
+                      )}
+                      onClick={() => handleQualityChange(opt.value)}
+                    >
+                      <span>{opt.label}</span>
+                      {audioQuality === opt.value ? <Check size={12} /> : null}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <Button variant="ghost" size="icon" onClick={handleDownload} disabled={!currentTrack}>
+              <Download size={16} />
             </Button>
           </div>
         </div>

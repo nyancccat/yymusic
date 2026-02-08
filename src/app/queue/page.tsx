@@ -4,7 +4,7 @@ import { SongList } from '@/components/business';
 import { Button } from '@/components/ui/button';
 import { usePlayer } from '@/context/PlayerContext';
 import { shuffle } from '@/lib/utils';
-import { ListMusic, Music2, Play, Shuffle } from 'lucide-react';
+import { ListMusic, Music2, Play, Shuffle, Waves } from 'lucide-react';
 import Link from 'next/link';
 
 export default function QueuePage() {
@@ -29,12 +29,15 @@ export default function QueuePage() {
 
   return (
     <div className="space-y-6">
-      <header className="flex flex-col gap-4 rounded-3xl border border-border bg-card/70 p-6 md:flex-row md:items-center md:justify-between">
-        <p className="text-sm text-muted-foreground">{playlist.length} 首歌曲</p>
+      <header className="flex flex-col gap-4 rounded-xl border border-border bg-card/90 p-5 md:flex-row md:items-center md:justify-between md:p-6">
+        <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
+          <ListMusic size={15} className="text-primary" />
+          队列里有 {playlist.length} 首歌
+        </p>
         <div className="flex items-center gap-2">
           <Button variant="outline" onClick={handleShuffle}>
             <Shuffle size={16} className="mr-2" />
-            随机播放
+            洗牌
           </Button>
           <Button variant="accent" onClick={handlePlayAll}>
             <Play size={16} className="mr-2" />
@@ -44,8 +47,8 @@ export default function QueuePage() {
       </header>
 
       {currentTrack && (
-        <div className="flex items-center gap-4 rounded-3xl border border-border bg-card/70 p-4">
-          <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-secondary">
+        <div className="flex items-center gap-4 rounded-xl border border-border bg-card/90 p-4">
+          <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-md bg-secondary">
             {currentTrack.cover ? (
               <img
                 src={currentTrack.cover}
@@ -60,21 +63,25 @@ export default function QueuePage() {
             <p className="truncate text-sm font-semibold">{currentTrack.name}</p>
             <p className="truncate text-xs text-muted-foreground">{currentTrack.artist}</p>
           </div>
+          <span className="ml-auto inline-flex items-center gap-1 rounded-sm bg-primary/12 px-2 py-1 text-[10px] font-semibold uppercase text-primary">
+            <Waves size={12} />
+            正在播放
+          </span>
         </div>
       )}
 
       {playlist.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 rounded-3xl border border-border bg-card/70 p-10 text-center text-muted-foreground">
+        <div className="flex flex-col items-center gap-3 rounded-xl border border-border bg-card/90 p-6 text-center text-muted-foreground md:p-10">
           <ListMusic size={40} />
-          <p className="text-sm">播放列表为空</p>
-          <p className="text-xs">从搜索或排行榜中添加歌曲</p>
+          <p className="text-sm">播放队列还是空的</p>
+          <p className="text-xs">去搜索页点一首歌，今晚就有开场曲。</p>
           <Button variant="outline" asChild>
             <Link href="/search">去搜索</Link>
           </Button>
         </div>
       ) : upNext.length > 0 ? (
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold">接下来播放</h2>
+          <h2 className="text-lg font-semibold">下一首，以及下一首</h2>
           <SongList
             songs={upNext.map((track) => ({
               id: track.id,

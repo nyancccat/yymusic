@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Music2, Play } from 'lucide-react';
+import { Music2, Play, Sparkles } from 'lucide-react';
 
 interface MediaCardProps {
   id: string;
@@ -18,8 +18,8 @@ export function MediaCard({ title, subtitle, imageUrl, onPlay }: MediaCardProps)
   };
 
   return (
-    <div className="group flex flex-col gap-2 rounded-2xl border border-border/60 bg-card/80 p-2.5 transition hover:border-primary/70 hover:shadow-glow md:gap-3 md:p-3">
-      <div className="relative overflow-hidden rounded-xl bg-secondary">
+    <div className="group flex flex-col gap-2 rounded-xl border border-border/70 bg-card/90 p-2.5 transition hover:border-primary/70 md:gap-3 md:p-3">
+      <div className="relative overflow-hidden rounded-md bg-secondary">
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -41,14 +41,19 @@ export function MediaCard({ title, subtitle, imageUrl, onPlay }: MediaCardProps)
           onClick={handlePlayClick}
           aria-label={`播放 ${title}`}
         >
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-glow">
+          <span className="flex h-10 w-10 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-[0_6px_20px_rgba(222,87,143,0.45)]">
             <Play size={18} className="ml-0.5" fill="currentColor" strokeWidth={0} />
           </span>
         </button>
       </div>
       <div className="space-y-1">
         <p className="truncate text-sm font-semibold text-foreground">{title}</p>
-        {subtitle && <p className="truncate text-xs text-muted-foreground">{subtitle}</p>}
+        {subtitle && (
+          <p className="flex items-center gap-1 truncate text-xs text-muted-foreground">
+            <Sparkles size={12} className="shrink-0 text-primary" />
+            {subtitle}
+          </p>
+        )}
       </div>
     </div>
   );

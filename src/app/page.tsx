@@ -6,7 +6,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getTopLists } from '@/lib/api';
 import type { MusicPlatform, TopListItem } from '@/lib/types';
 import { storage } from '@/lib/utils';
-import { Loader2, Sparkles } from 'lucide-react';
+import { Compass, Loader2, Sparkles, Waves } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -84,9 +84,9 @@ export default function HomePage() {
         console.error(err);
         if (cancelled) return;
         if (!cached?.list?.length) {
-          setError('加载排行榜失败，请稍后重试');
+          setError('风声太大，榜单暂时没有传来。');
         } else {
-          setError('网络波动，已显示缓存数据');
+          setError('网络有些摇晃，先听缓存里的温柔。');
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -100,26 +100,32 @@ export default function HomePage() {
   }, [platform]);
 
   return (
-    <div className="space-y-8 md:space-y-10">
-      <section className="relative overflow-hidden rounded-3xl border border-border bg-card/70 p-6 md:p-8">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-transparent" />
+    <div className="space-y-6 md:space-y-10">
+      <section className="relative overflow-hidden rounded-xl border border-border/70 bg-card/90 p-5 md:p-8">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/15 via-transparent to-transparent" />
         <div className="relative flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-3">
-            <p className="text-xs uppercase tracking-[0.32em] text-muted-foreground">沉浸式精选</p>
+            <p className="flex items-center gap-1.5 text-xs uppercase tracking-[0.24em] text-muted-foreground">
+              <Sparkles size={13} className="text-primary" />
+              今日序曲
+            </p>
             <h2 className="font-display text-2xl font-semibold md:text-4xl">
-              黑金听境 · 余韵女神的祝福
+              把夜晚交给耳机，把心事交给旋律。
             </h2>
             <p className="max-w-xl text-sm text-muted-foreground">
-              三大平台热榜在此汇流，歌词随声而至，音质温润，留住今日最动人的回响。
+              三个平台的热门榜单在这里相逢。你只管点开，故事会自己流动。
             </p>
           </div>
           <div className="flex items-center gap-3">
             <Button variant="accent" onClick={handleExplore}>
-              <Sparkles size={16} className="mr-2" />
-              开始探索
+              <Waves size={16} className="mr-2" />
+              开始聆听
             </Button>
             <Button variant="outline" asChild>
-              <Link href="/search">快速搜索</Link>
+              <Link href="/search">
+                <Compass size={15} className="mr-2" />
+                去找一首歌
+              </Link>
             </Button>
           </div>
         </div>
@@ -128,8 +134,11 @@ export default function HomePage() {
       <section id="toplists" className="space-y-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h3 className="text-xl font-semibold">排行榜</h3>
-            <p className="text-sm text-muted-foreground">热门榜单与精选歌单</p>
+            <h3 className="flex items-center gap-2 text-xl font-semibold">
+              <Sparkles size={17} className="text-primary" />
+              榜单画廊
+            </h3>
+            <p className="text-sm text-muted-foreground">从热歌到长尾，让每一次下滑都有惊喜。</p>
           </div>
           <Tabs value={platform} onValueChange={(value) => setPlatform(value as MusicPlatform)}>
             <TabsList>
@@ -149,19 +158,17 @@ export default function HomePage() {
         ) : null}
 
         {error && topLists.length === 0 ? (
-          <div className="rounded-2xl border border-border bg-card/70 p-6 text-center">
+          <div className="rounded-xl border border-border bg-card/90 p-6 text-center">
             <p className="text-sm text-muted-foreground">{error}</p>
             <Button variant="outline" className="mt-4" onClick={() => setPlatform(platform)}>
-              重试
+              再试一次
             </Button>
           </div>
         ) : null}
 
         {topLists.length > 0 ? (
           <div className="space-y-3">
-            {error && (
-              <p className="text-xs text-muted-foreground">{error}</p>
-            )}
+            {error && <p className="text-xs text-muted-foreground">{error}</p>}
             <MediaGrid>
               {topLists.slice(0, 12).map((list) => (
                 <Link key={list.id} href={`/toplist/${platform}/${list.id}`}>
