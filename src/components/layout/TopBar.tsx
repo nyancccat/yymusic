@@ -3,6 +3,7 @@
 import { ThemeToggle } from '@/components/common/ThemeToggle';
 import { Button } from '@/components/ui/button';
 import { useLyrics } from '@/context/LyricsContext';
+import { cn } from '@/lib/utils';
 import {
   Compass,
   Disc3,
@@ -44,7 +45,7 @@ const TITLE_MAP: Record<string, { title: string; subtitle: string; icon: LucideI
     icon: LibraryBig,
   },
   '/about': {
-    title: '关于余韵',
+    title: '关于 余韵音乐',
     subtitle: '一座温柔的在线唱片馆。',
     icon: Sparkles,
   },
@@ -74,21 +75,42 @@ export function TopBar() {
   }, [pathname]);
 
   const HeaderIcon = header.icon;
+  const isAboutPage = pathname === '/about';
 
   return (
     <header className="z-40 border-b border-border/70 bg-background/95 backdrop-blur-md md:sticky md:top-0">
-      <div className="flex items-center justify-between gap-3 px-3 py-3 md:gap-4 md:px-8 md:py-5">
+      <div
+        className={cn(
+          'flex items-center justify-between gap-3 px-3 py-3 md:gap-4 md:px-8 md:py-5',
+          isAboutPage && 'py-2.5'
+        )}
+      >
         <div className="min-w-0">
-          <p className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground md:text-xs">
+          <p
+            className={cn(
+              'text-[10px] uppercase tracking-[0.32em] text-muted-foreground md:text-xs',
+              isAboutPage && 'tracking-[0.28em] text-muted-foreground/90'
+            )}
+          >
             yyMusic
           </p>
-          <div className="mt-2 flex items-center gap-2">
-            <HeaderIcon size={18} className="shrink-0 text-primary" />
-            <h1 className="truncate font-display text-xl font-semibold leading-[1.2] md:text-3xl">
+          <div className={cn('mt-2 flex items-center gap-2', isAboutPage && 'mt-1.5 gap-1.5')}>
+            <HeaderIcon size={isAboutPage ? 16 : 18} className="shrink-0 text-primary" />
+            <h1
+              className={cn(
+                'truncate font-display text-xl font-semibold leading-[1.2] md:text-3xl',
+                isAboutPage && 'text-[19px] leading-[1.25]'
+              )}
+            >
               {header.title}
             </h1>
           </div>
-          <p className="mt-1 truncate text-[11px] text-muted-foreground md:text-sm">
+          <p
+            className={cn(
+              'mt-1 truncate text-[11px] text-muted-foreground md:text-sm',
+              isAboutPage && 'mt-1.5 text-[10.5px] tracking-[0.02em] text-muted-foreground/90'
+            )}
+          >
             {header.subtitle}
           </p>
         </div>
