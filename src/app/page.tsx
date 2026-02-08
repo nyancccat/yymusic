@@ -141,9 +141,9 @@ export default function HomePage() {
             <p className="text-sm text-muted-foreground">从热歌到长尾，让每一次下滑都有惊喜。</p>
           </div>
           <Tabs value={platform} onValueChange={(value) => setPlatform(value as MusicPlatform)}>
-            <TabsList>
+            <TabsList className="mx-auto w-full max-w-[340px] justify-between sm:w-auto sm:max-w-none sm:justify-center">
               {PLATFORMS.map((p) => (
-                <TabsTrigger key={p.id} value={p.id}>
+                <TabsTrigger key={p.id} value={p.id} className="flex-1 sm:flex-none">
                   {p.name}
                 </TabsTrigger>
               ))}
